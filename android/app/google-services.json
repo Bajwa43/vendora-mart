@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "342012303643",
+    "project_id": "vendoora-mart",
+    "storage_bucket": "vendoora-mart.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342012303643:android:9b032f2bc2412e7bcf1bbe",
+        "android_client_info": {
+          "package_name": "com.example.vendoora_mart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_nGP11aJ4dTwqLJYXP1qMQpHoVS_16ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
