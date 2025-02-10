@@ -3,19 +3,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 
 class HelperFirebase {
-  static var categroyTypeFirestoreInstance =
-      FirebaseFirestore.instance.collection('CategoryType');
+  static HomeController homeController = Get.find();
+  // static var categroyTypeFirestoreInstance =
+  //     FirebaseFirestore.instance.collection('CategoryType');
   static var storageInstance = FirebaseStorage.instance;
 
-  static var tasksFirestoreInstance =
-      FirebaseFirestore.instance.collection('Tasks');
+  // static var tasksFirestoreInstance =
+  //     FirebaseFirestore.instance.collection('Tasks');
 
   // static
 
   static var userInstance = FirebaseFirestore.instance.collection('Users');
+  static var addToCartInstance = FirebaseFirestore.instance
+      .collection('Users')
+      .doc(homeController.firebaseUser.value!.uid)
+      .collection('Carted');
   static var productInstance =
       FirebaseFirestore.instance.collection('Products');
 

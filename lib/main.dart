@@ -1,10 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
-import 'package:vendoora_mart/features/auth/screens/registration.dart';
-import 'package:vendoora_mart/features/vendor/add_Product/vender_add_item_screen.dart';
-import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
+import 'package:get/get.dart';
+import 'package:vendoora_mart/app.dart';
+import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
+import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
 import 'package:vendoora_mart/firebase_options.dart';
 
 void main() async {
@@ -12,17 +11,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put(HomeController()); // Register  Controller
+  // Get.put(ProductCartController());
   runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const ScreenUtilInit(
-        child: MaterialApp(
-      title: 'E-Commerce App',
-      debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
-    ));
-  }
 }

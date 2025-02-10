@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
-import 'package:vendoora_mart/features/user/dashboard/screens/dashboard_screen.dart';
+import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -23,7 +23,7 @@ class AuthWrapper extends StatelessWidget {
         var user = snapshot.data;
 
         if (user != null) {
-          return const DashboardScreen();
+          return const UserHomeScreen();
         } else {
           return const LoginScreen();
         }

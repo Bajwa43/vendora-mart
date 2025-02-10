@@ -37,6 +37,7 @@ class UploadDataWidget extends StatelessWidget {
       var venderId = FirebaseAuth.instance.currentUser!.uid;
 
       ProductModel productData = ProductModel(
+        images: [],
         venderUid: venderId,
         productUid: productId,
         publish: false,

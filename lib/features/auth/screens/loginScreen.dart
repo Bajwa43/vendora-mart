@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vendoora_mart/features/auth/screens/registration.dart';
-import 'package:vendoora_mart/features/user/dashboard/screens/dashboard_screen.dart';
+import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
 import 'package:vendoora_mart/helper/enum.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
@@ -23,8 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _validateAndLogin() {
     if (_formKey.currentState!.validate()) {
-      String username = _usernameController.text;
-      String password = _passwordController.text;
+      // String username = _usernameController.text;
+      // String password = _passwordController.text;
 
       AuthService.loginUserWithEmailAndPassword(
           context, _usernameController, _passwordController);

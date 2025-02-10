@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vendoora_mart/app.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
 
 import 'package:vendoora_mart/main.dart';

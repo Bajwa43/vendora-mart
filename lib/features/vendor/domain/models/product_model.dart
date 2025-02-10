@@ -15,8 +15,7 @@ class ProductModel {
   String? keyFeatures;
   String? description;
   List<String>? sizes;
-  List<String>? images; // Added list of images
-
+  List<String> images; // Added list of images
   ProductModel({
     this.venderUid,
     this.productUid,
@@ -29,7 +28,7 @@ class ProductModel {
     this.keyFeatures,
     this.description,
     this.sizes,
-    this.images,
+    required this.images,
   });
 
   ProductModel copyWith({
@@ -98,10 +97,8 @@ class ProductModel {
           map['keyFeatures'] != null ? map['keyFeatures'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
-      // sizes: map['sizes'] != null ? List<String>.from((map['sizes'] as List<String>) : null,
-      // images: map['images'] != null ? List<String>.from((map['images'] as List<String>) : null,
       sizes: List<String>.from(map['sizes'] ?? []),
-      images: List<String>.from(map['images'] ?? []), // Parse images
+      images: List<String>.from(map['images'] ?? []),
     );
   }
 

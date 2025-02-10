@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get.dart';
 // import 'package:get/get.dart';
@@ -18,7 +19,7 @@ import 'package:flutter/material.dart';
 // import 'package:todo_app/services/auth_exception_handler.dart';
 // import 'package:todo_app/widgets/txtWidget.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
-import 'package:vendoora_mart/features/user/dashboard/screens/dashboard_screen.dart';
+import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
 import 'package:vendoora_mart/helper/enum.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
@@ -80,16 +81,17 @@ class AuthService {
       TextEditingController emailController,
       TextEditingController passwordController) async {
     try {
+      print('Enter in TRY BLOck ');
       // Show loading dialog
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator.adaptive(
-            valueColor: AlwaysStoppedAnimation(Colors.amberAccent),
-          ),
-        ),
-      );
+      // showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (context) => const Center(
+      //     child: CircularProgressIndicator.adaptive(
+      //       valueColor: AlwaysStoppedAnimation(Colors.amberAccent),
+      //     ),
+      //   ),
+      // );
 
       // Authenticate user
       UserCredential userCredential = await FirebaseAuth.instance
@@ -98,29 +100,55 @@ class AuthService {
               password: passwordController.text.trim());
 
       // Fetch user data from Firestore
+
       QuerySnapshot snapshot = await HelperFirebase.userInstance
-          .where('userType', isEqualTo: UserType.vendor.value)
           .where('email', isEqualTo: emailController.text)
+          .where('userType', isEqualTo: UserType.vendor.value)
           .get();
 
+      print('After CHECK INSTANCE ');
+
       // Close loading dialog
-      Navigator.pop(context);
+      // Navigator.pop(context);
+
+      print('After CHECK INSTANCE AND POP CIRCULAR');
 
       // Navigate based on user type
       if (snapshot.docs.isNotEmpty) {
+        print('ENTER IN WITH VENDER INSTANCE ');
+
         // Vendor user
         HelperFunctions.navigateToScreen(
             context: context, screen: VendorHomeScreen());
       } else {
+        print('✅ Navigating to UserHomeScreen');
+        print('Snapshot empty, treating as customer.');
+
+        await Future.delayed(
+            Duration(milliseconds: 500)); // Small delay for UI updates
+
+        await Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => UserHomeScreen()),
+        );
+
+        print('✅ Navigation should have occurred.');
+
         // Regular user
-        HelperFunctions.navigateToScreen(
-            context: context, screen: DashboardScreen());
+
+        // Navigator.pop(context);
+
+        // HelperFunctions.navigateToScreen(
+        //     context: context, screen: UserHomeScreen());
+
+        // await Get.off(() => UserHomeScreen());
       }
 
       // Show success toast
       HelperFunctions.showToast(
           '${userCredential.user!.email} logged in successfully');
     } on FirebaseAuthException catch (e) {
+      print('ENTER IN FIRST CATCH');
+
       // Close loading dialog
       Navigator.pop(context);
 
@@ -130,7 +158,9 @@ class AuthService {
       HelperFunctions.showToast(error);
     } catch (e) {
       // Close loading dialog for any unexpected errors
-      Navigator.pop(context);
+      // Navigator.pop(context);
+      print('ENTER IN SECOND CATCH');
+
       HelperFunctions.showToast(
           'An unexpected error occurred. Please try again.');
       debugPrint('Error: $e');

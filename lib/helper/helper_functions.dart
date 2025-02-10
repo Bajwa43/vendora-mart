@@ -6,6 +6,14 @@ class HelperFunctions {
     Navigator.pop(context);
   }
 
+  static void popWithRemoveAllStates(BuildContext context, Widget screen) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+      (route) => false, // This removes all previous routes from the stack
+    );
+  }
+
   static void navigateToScreen(
       {required BuildContext context, required Widget screen}) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
