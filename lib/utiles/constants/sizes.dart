@@ -3,12 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TSizes {
   TSizes._();
 
+  static double LargeSizeText = 24.sp;
+
   static double padOfScreen = 16.w;
   static double padbtWidgets = 25.h;
   static double padbttextLabel = 10.h;
   static double padbttextdescroption = 5.h;
 
   static double cartIconSize = 45.sp;
+  static double normalIconSize = 24.sp;
 
   static double profilePictureW = 48.w;
   static double profilePictureH = 48.h;
@@ -44,6 +47,9 @@ class TSizes {
   static double cartItemH = 110.h;
   static double cartDetailH = 206.h;
   static var productLabelL = 20.sp;
+
+  // CHECKOUT
+  static double checkOutContainerH = 48.h;
 
   // Padding and margin sizes
 //   static const double xs = 4.0;

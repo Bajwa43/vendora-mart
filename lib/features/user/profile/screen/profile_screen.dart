@@ -1,0 +1,120 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
+import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
+import 'package:vendoora_mart/features/user/profile/widget/profile_containers_widget.dart';
+import 'package:vendoora_mart/utiles/constants/colors.dart';
+import 'package:vendoora_mart/utiles/constants/image_string.dart';
+import 'package:vendoora_mart/utiles/constants/sizes.dart';
+import 'package:vendoora_mart/utiles/constants/txt_theme.dart';
+
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  // late UserModel user;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // await controller.getUserProfile();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ProductCartController controller = Get.find();
+
+    var auth = FirebaseAuth.instance;
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: TSizes.padOfScreen, vertical: TSizes.padOfScreen),
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(40),
+                child: SizedBox(
+                    width: 80.w,
+                    height: 80.h,
+                    child: Image.asset(TImageString.myImage)),
+              ),
+              // Text(
+              //   user.fullName.toString(),
+              //   style: TTextStyle.profileHeader,
+              // ),
+              Text(auth.currentUser!.email.toString(),
+                  style: TTextStyle.brandTextStyle),
+
+              SizedBox(
+                height: 20.h,
+              ),
+              // CONTAINERS
+              ProfileConatainerWidget(
+                icon: Icon(
+                  Icons.person,
+                  size: 24.sp,
+                  color: TColors.labelName,
+                ),
+                title: 'Person',
+              ),
+              ProfileConatainerWidget(
+                icon: Icon(
+                  Icons.settings,
+                  size: 24.sp,
+                  color: TColors.labelName,
+                ),
+                title: 'Setting',
+              ),
+              ProfileConatainerWidget(
+                icon: Icon(
+                  Icons.email,
+                  size: 24.sp,
+                  color: TColors.labelName,
+                ),
+                title: 'Contact',
+              ),
+              ProfileConatainerWidget(
+                icon: Icon(
+                  Icons.share_outlined,
+                  size: 24.sp,
+                  color: TColors.labelName,
+                ),
+                title: 'Share App',
+              ),
+              ProfileConatainerWidget(
+                icon: Icon(
+                  Icons.help_outline_sharp,
+                  size: 24.sp,
+                  color: TColors.labelName,
+                ),
+                title: 'Help',
+              ),
+
+              // SIGNOUT
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 30.h),
+                child: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Sign Out',
+                      style: TextStyle(color: Colors.red, fontSize: 16.sp),
+                    )),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

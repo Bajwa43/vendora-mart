@@ -6,8 +6,14 @@ import 'package:flutter/painting.dart';
 class TColors {
   TColors._();
 
+  // CHECKOUT
+  static const Color checkOutAdressLogoColor = Color(0xF8F7F7);
+  static const Color checkOutTimeLogoColor = Color(0x63CDFF);
+
   static const Color IconColor = Color(0xFF6055D8);
   static const Color cartIconColor = Color(0xFFD3D0D0);
+  static const Color labelName = Colors.black;
+  static const Color labelBrand = Color(0xFF9B9999);
 
   static const Color primary = Color(0xFF4b68ff);
   static const Color secondary = Color(0xFFFFE24B);

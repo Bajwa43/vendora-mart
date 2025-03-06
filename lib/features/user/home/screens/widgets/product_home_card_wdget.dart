@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
+import 'package:vendoora_mart/common/iconbtn.dart';
 import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
@@ -10,7 +11,7 @@ import 'package:vendoora_mart/utiles/constants/image_string.dart';
 import 'package:vendoora_mart/utiles/constants/sizes.dart';
 
 import '../../../../../utiles/constants/colors.dart';
-import '../all_products/Product_Cart_Page.dart';
+import '../Product_Cart_Page.dart';
 
 class ProductHomeCardWidget extends StatelessWidget {
   const ProductHomeCardWidget(
@@ -44,7 +45,7 @@ class ProductHomeCardWidget extends StatelessWidget {
         child: Stack(children: [
           Container(
             width: TSizes.homeProductW,
-            color: Colors.grey,
+            color: TColors.darkContainer,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -111,12 +112,18 @@ class ProductHomeCardWidget extends StatelessWidget {
               ? Positioned(
                   bottom: 4.h,
                   right: 4.w,
-                  child: InkWell(
-                      onTap: onTap,
-                      child: const Icon(
-                        Icons.add_circle,
-                        color: TColors.IconColor,
-                      )))
+                  child: IconBtnWidget(
+                    onTap: onTap,
+                    width: 24.w,
+                    height: 24,
+                  )
+                  //  InkWell(
+                  //     onTap: onTap,
+                  //     child: const Icon(
+                  //       Icons.add_circle,
+                  //       color: TColors.IconColor,
+                  //     ))
+                  )
               : const SizedBox()
         ]),
       ),

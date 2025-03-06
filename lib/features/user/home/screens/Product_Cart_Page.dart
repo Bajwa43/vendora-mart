@@ -94,7 +94,7 @@ class _ProductCartPageState extends State<ProductCartPage> {
                       height: TSizes.padbttextdescroption,
                     ),
                     SizedBox(
-                      height: 50, // Set a fixed height
+                      height: 40.h, // Set a fixed height
                       child: ListView.builder(
                         scrollDirection: Axis
                             .horizontal, // Add this if it's for size selection
@@ -145,14 +145,17 @@ class _ProductCartPageState extends State<ProductCartPage> {
                                 context, widget.product),
                             widthOfContainer: width * 0.65,
                             textOfBtn: 'Buy Now'),
-                        // SizedBox(
-                        //     width: 10,
-                        //     height: 10,
-                        //     child: Image.asset(TImageString.cartIcon))
                         Padding(
                           padding: const EdgeInsets.only(right: 20),
-                          child: Icon(Icons.card_travel),
+                          child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: Image.asset(TImageString.cartIcon)),
                         )
+                        // Padding(
+                        //   padding: const EdgeInsets.only(right: 20),
+                        //   child: Icon(Icons.card_travel),
+                        // )
                       ],
                     ),
                     SizedBox(

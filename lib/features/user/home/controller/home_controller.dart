@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/carted_model.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/wishlist_model.dart';
+import 'package:vendoora_mart/features/user/home/screens/cart_list_page/cart_list_page.dart';
 import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
@@ -52,7 +53,7 @@ class HomeController extends GetxController {
       Get.back();
       selectedSize = "".obs;
       HelperFunctions.navigateToScreen(
-          context: context, screen: UserHomeScreen());
+          context: context, screen: CartListPage());
     } catch (e) {
       HelperFunctions.showToast(e.toString());
     }

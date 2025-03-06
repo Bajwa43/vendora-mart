@@ -12,6 +12,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put(HomeController()); // Register  Controller
-  // Get.put(ProductCartController());
+  Get.put(ProductCartController());
+
   runApp(MyApp());
 }

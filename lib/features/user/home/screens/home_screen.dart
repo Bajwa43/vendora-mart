@@ -7,6 +7,7 @@ import 'package:vendoora_mart/features/user/home/controller/home_controller.dart
 import 'package:vendoora_mart/features/user/home/screens/widgets/ads_scroller_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/product_list_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/search_widget.dart';
+import 'package:vendoora_mart/features/user/profile/screen/profile_screen.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 import 'package:vendoora_mart/services/auth_service.dart';
@@ -60,8 +61,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           child: Text('Explore Screen', style: TextStyle(fontSize: 24))),
       const Center(
           child: Text('Carted Screen', style: TextStyle(fontSize: 24))),
-      const Center(
-          child: Text('Profile Screen', style: TextStyle(fontSize: 24))),
+      ProfileScreen(),
     ];
     return Scaffold(
       body: Obx(

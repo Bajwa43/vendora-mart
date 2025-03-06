@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
-import 'package:vendoora_mart/features/user/home/screens/all_products/Product_Cart_Page.dart';
+import 'package:vendoora_mart/features/user/home/screens/Product_Cart_Page.dart';
 // import 'package:vendoora_mart/features/user/home/screens/all_products/second_page.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/product_home_card_wdget.dart';
 import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
