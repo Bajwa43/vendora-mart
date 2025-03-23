@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vendoora_mart/features/auth/screens/registration.dart';
@@ -26,8 +27,22 @@ class _LoginScreenState extends State<LoginScreen> {
       // String username = _usernameController.text;
       // String password = _passwordController.text;
 
-      AuthService.loginUserWithEmailAndPassword(
-          context, _usernameController, _passwordController);
+      try {
+        AuthService.loginUserWithEmailAndPassword(
+            context, _usernameController, _passwordController);
+      } catch (e) {
+        HelperFunctions.showToast('Network Issue');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (!kReleaseMode) {
+      _usernameController.text = "farhanali@gmail.com";
+      _passwordController.text = "farhanali";
     }
   }
 

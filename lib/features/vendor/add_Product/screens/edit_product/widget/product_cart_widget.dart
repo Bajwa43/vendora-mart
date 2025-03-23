@@ -103,13 +103,16 @@ class _ProductCartWidgetState extends State<ProductCartWidget> {
                           width: 100,
                           height: 100,
                           color: Colors.amber,
-                          child: widget.product.images != null &&
-                                  widget.product.images!.isNotEmpty
-                              ? Image.network(
-                                  widget.product.images!.first,
-                                  fit: BoxFit.cover,
-                                )
-                              : const Icon(Icons.image_not_supported),
+                          child:
+                              //  widget.product.images != null &&
+                              widget.product.images.isNotEmpty &&
+                                      // widget.product.images.first != null &&
+                                      widget.product.images.first.isNotEmpty
+                                  ? Image.network(
+                                      widget.product.images.first,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const Icon(Icons.image_not_supported),
                         ),
                       ),
                       const SizedBox(width: 10),

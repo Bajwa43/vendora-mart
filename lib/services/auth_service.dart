@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get.dart';
@@ -80,26 +81,36 @@ class AuthService {
       BuildContext context,
       TextEditingController emailController,
       TextEditingController passwordController) async {
-    try {
-      print('Enter in TRY BLOck ');
-      // Show loading dialog
-      // showDialog(
-      //   context: context,
-      //   barrierDismissible: false,
-      //   builder: (context) => const Center(
-      //     child: CircularProgressIndicator.adaptive(
-      //       valueColor: AlwaysStoppedAnimation(Colors.amberAccent),
-      //     ),
-      //   ),
-      // );
+    // try {
+    // print('Enter in TRY BLOck ');
+    // Show loading dialog
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Center(
+    //     child: CircularProgressIndicator.adaptive(
+    //       valueColor: AlwaysStoppedAnimation(Colors.amberAccent),
+    //     ),
+    //   ),
+    // );
 
-      // Authenticate user
+    // Authenticate user
+    try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: emailController.text.trim(),
               password: passwordController.text.trim());
 
-      // Fetch user data from Firestore
+      // Successfully logged in
+      // HelperFunctions.showToast('Login Successful');
+      Fluttertoast.showToast(
+          msg: 'Login Succes Full',
+          toastLength: Toast.LENGTH_SHORT,
+          // gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       QuerySnapshot snapshot = await HelperFirebase.userInstance
           .where('email', isEqualTo: emailController.text)
@@ -109,7 +120,6 @@ class AuthService {
       print('After CHECK INSTANCE ');
 
       // Close loading dialog
-      // Navigator.pop(context);
 
       print('After CHECK INSTANCE AND POP CIRCULAR');
 
@@ -142,29 +152,56 @@ class AuthService {
 
         // await Get.off(() => UserHomeScreen());
       }
-
-      // Show success toast
-      HelperFunctions.showToast(
-          '${userCredential.user!.email} logged in successfully');
     } on FirebaseAuthException catch (e) {
-      print('ENTER IN FIRST CATCH');
-
-      // Close loading dialog
-      Navigator.pop(context);
-
-      // Handle authentication error
-      AuthStatus status = AuthExceptionHandler.handleAuthException(e);
-      String error = AuthExceptionHandler.generateErrorMessage(status);
-      HelperFunctions.showToast(error);
+      if (e.code == 'user-not-found') {
+        HelperFunctions.showToast('No user found with this email.');
+      } else if (e.code == 'wrong-password') {
+        HelperFunctions.showToast('Incorrect password. Try again.');
+      } else if (e.code == 'user-disabled') {
+        HelperFunctions.showToast('This account has been disabled.');
+      } else if (e.code == 'invalid-email') {
+        HelperFunctions.showToast('Invalid email format.');
+      } else if (e.code == 'too-many-requests') {
+        HelperFunctions.showToast('Too many attempts. Try again later.');
+      } else if (e.code == 'network-request-failed') {
+        HelperFunctions.showToast(
+            'No internet connection. Please check your network.');
+      } else {
+        HelperFunctions.showToast('Login failed: ${e.message}');
+      }
     } catch (e) {
-      // Close loading dialog for any unexpected errors
-      // Navigator.pop(context);
-      print('ENTER IN SECOND CATCH');
-
       HelperFunctions.showToast(
           'An unexpected error occurred. Please try again.');
-      debugPrint('Error: $e');
     }
+
+    // Fetch user data from Firestore for is this vender or user
+
+    // Navigator.pop(context);
+
+    // Show success toast
+    // HelperFunctions.showToast(
+    //     '${userCredential.user!.email} logged in successfully');
+    // } on FirebaseAuthException catch (e) {
+    //   print('ENTER IN FIRST CATCH');
+
+    //   // Close loading dialog
+    //   // Navigator.pop(context);
+
+    //   // Handle authentication error
+    //   AuthStatus status = AuthExceptionHandler.handleAuthException(e);
+    //   String error = AuthExceptionHandler.generateErrorMessage(status);
+    //   HelperFunctions.showToast(error);
+    // } catch (e) {
+    //   // Close loading dialog for any unexpected errors
+    //   // Navigator.pop(context);
+    //   print('ENTER IN SECOND CATCH');
+
+    //   HelperFunctions.showToast(
+    //       'An unexpected error occurred. Please try again.');
+    //   debugPrint('Error: $e');
+    // }
+
+    // Navigator.pop(context);
   }
 
   // static loginUserWithEmailAndPassword(

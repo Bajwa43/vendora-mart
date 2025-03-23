@@ -31,7 +31,8 @@ class ProfileWidget extends StatelessWidget {
                 style: TextStyle(fontSize: TSizes.headingSmallS),
               ),
               Text(
-                FirebaseAuth.instance.currentUser!.email.toString(),
+                FirebaseAuth.instance.currentUser?.email.toString() ??
+                    'No emial',
                 style: TextStyle(fontSize: TSizes.headingMediumS),
               ),
             ],

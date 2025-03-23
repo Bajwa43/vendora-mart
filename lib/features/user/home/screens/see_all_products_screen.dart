@@ -21,8 +21,9 @@ class SeeAllProductsScreen extends StatefulWidget {
 class _SeeAllProductsScreenState extends State<SeeAllProductsScreen> {
   @override
   Widget build(BuildContext context) {
-    final ProductCartController productCartController =
-        Get.put(ProductCartController());
+    // final ProductCartController productCartController =
+    //     Get.put(ProductCartController());
+    final ProductCartController productCartController = Get.find();
     final HomeController homeController = Get.find();
     List<ProductModel> list = homeController.listOfProducts
         .where((products) => products.fashionCategory == widget.productType)

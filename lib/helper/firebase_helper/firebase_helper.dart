@@ -22,7 +22,8 @@ class HelperFirebase {
   static var userInstance = FirebaseFirestore.instance.collection('Users');
   static var addToCartInstance = FirebaseFirestore.instance
       .collection('Users')
-      .doc(homeController.firebaseUser.value!.uid)
+      .doc(homeController.firebaseUser.value?.uid.toString())
+      // .doc()
       .collection('Carted');
   static var productInstance =
       FirebaseFirestore.instance.collection('Products');

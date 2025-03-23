@@ -4,8 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
+import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
 import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
 import 'package:vendoora_mart/features/user/profile/widget/profile_containers_widget.dart';
+import 'package:vendoora_mart/helper/helper_functions.dart';
+import 'package:vendoora_mart/services/auth_service.dart';
 import 'package:vendoora_mart/utiles/constants/colors.dart';
 import 'package:vendoora_mart/utiles/constants/image_string.dart';
 import 'package:vendoora_mart/utiles/constants/sizes.dart';
@@ -19,19 +22,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var auth;
+
   // late UserModel user;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // await controller.getUserProfile();
+    auth = FirebaseAuth.instance;
   }
 
   @override
   Widget build(BuildContext context) {
     final ProductCartController controller = Get.find();
 
-    var auth = FirebaseAuth.instance;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -52,7 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //   user.fullName.toString(),
               //   style: TTextStyle.profileHeader,
               // ),
-              Text(auth.currentUser!.email.toString(),
+
+              Text(auth.currentUser?.email.toString() ?? 'No emial',
                   style: TTextStyle.brandTextStyle),
 
               SizedBox(
@@ -105,7 +110,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 30.h),
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      try {
+                        AuthService.logOut(context);
+                        HelperFunctions.navigateToScreen(
+                            context: context, screen: LoginScreen());
+                      } catch (e) {
+                        HelperFunctions.showToast('Network Issue');
+                      }
+                    },
                     child: Text(
                       'Sign Out',
                       style: TextStyle(color: Colors.red, fontSize: 16.sp),

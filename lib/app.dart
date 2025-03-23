@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:vendoora_mart/features/auth/auth_wraper.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
+import 'package:vendoora_mart/features/auth/screens/registration.dart';
 import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/add_Product/vender_add_item_screen.dart';
 import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
@@ -24,8 +26,11 @@ class MyApp extends StatelessWidget {
             themeColorBaseOnBrightnessUsingAtManyNeededlocation: TColors.accent,
             themeOPColorBaseOnBrightnessUsingAtManyNeededLocation:
                 Colors.white),
-        home: const UserHomeScreen(),
-        // home: const VendorDashboardScreen(),
+        // home: const UserHomeScreen(),
+        // home: const VendorHomeScreen(),
+        // home: const LoginScreen(),
+        // home: RegistrationScreen(),
+        home: AuthWrapper(),
 
         // home: const SeeAllProductsScreen(productType: TTextString.clotheCategory),
 

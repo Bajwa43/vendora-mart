@@ -73,8 +73,11 @@ class _EditProductScreenState extends State<EditProductScreen>
               children: [
                 // Published Products
                 // _buildAnimatedTabContent('Published Products'),
+                // Text('data'),
+
                 EditProductWidget(published: false),
                 EditProductWidget(published: true),
+                // Text('data'),
                 // Unpublished Products
                 // _buildAnimatedTabContent('Unpublished Products'),
               ],

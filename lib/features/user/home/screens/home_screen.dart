@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
 import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
+import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/ads_scroller_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/product_list_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/search_widget.dart';
@@ -31,6 +32,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     // TODO: implement initState
     super.initState();
     searchController = TextEditingController();
+    Get.put(HomeController()); // Register  Controller
+    Get.put(ProductCartController());
   }
 
   @override

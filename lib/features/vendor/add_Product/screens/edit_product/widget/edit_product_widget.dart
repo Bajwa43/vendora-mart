@@ -40,11 +40,29 @@ class _EditProductWidgetState extends State<EditProductWidget> {
     // print('Products fetched: $products');
   }
 
+  void fetchProductsManually() async {
+    try {
+      var snapshot = await HelperFirebase.productInstance
+          .where('publish', isEqualTo: widget.published)
+          .where('venderUid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      print("Documents fetched: ${snapshot.docs.length}");
+
+      for (var doc in snapshot.docs) {
+        print(doc.data()); // Print each product
+      }
+    } catch (e) {
+      print("Error fetching products: $e");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchProducts();
+    // fetchProducts();
+    // fetchProductsManually();
   }
 
   @override
@@ -63,6 +81,8 @@ class _EditProductWidgetState extends State<EditProductWidget> {
     return StreamBuilder(
       stream: fetchProducts(),
       builder: (context, snapshot) {
+        // print('.................................${}');
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -84,11 +104,16 @@ class _EditProductWidgetState extends State<EditProductWidget> {
         }
 
         final products = snapshot.data!;
-        return ListView.builder(
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            return ProductCartWidget(product: products[index]);
-          },
+        print('.................................${products.length}');
+
+        return Container(
+          height: 30,
+          child: ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return ProductCartWidget(product: products[index]);
+            },
+          ),
         );
       },
     );
