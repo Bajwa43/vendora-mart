@@ -28,9 +28,9 @@ class MyApp extends StatelessWidget {
                 Colors.white),
         // home: const UserHomeScreen(),
         // home: const VendorHomeScreen(),
-        // home: const LoginScreen(),
+        home: const LoginScreen(),
         // home: RegistrationScreen(),
-        home: AuthWrapper(),
+        // home: AuthWrapper(),
 
         // home: const SeeAllProductsScreen(productType: TTextString.clotheCategory),
 

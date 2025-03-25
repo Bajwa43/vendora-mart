@@ -50,19 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB_nGP11aJ4dTwqLJYXP1qMQpHoVS_16ZU',
-    appId: '1:342012303643:android:9b032f2bc2412e7bcf1bbe',
-    messagingSenderId: '342012303643',
-    projectId: 'vendoora-mart',
-    storageBucket: 'vendoora-mart.firebasestorage.app',
+    apiKey: 'AIzaSyBhBb30xSMSKJegLnbT4jdotRwO4H1_14o',
+    appId: '1:1033581757125:android:56e4aad5175d8380a026ac',
+    messagingSenderId: '1033581757125',
+    projectId: 'note-vault-eefb1',
+    storageBucket: 'note-vault-eefb1.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCCjhyVPbytWciMpe584xS_4U57KJmXtck',
-    appId: '1:342012303643:ios:7f72ae232a6f3ff5cf1bbe',
-    messagingSenderId: '342012303643',
-    projectId: 'vendoora-mart',
-    storageBucket: 'vendoora-mart.firebasestorage.app',
+    apiKey: 'AIzaSyD6mnXd6C1wgvh6m0mPTF0hhQtKGp4dTJ0',
+    appId: '1:1033581757125:ios:39d8efd44488a496a026ac',
+    messagingSenderId: '1033581757125',
+    projectId: 'note-vault-eefb1',
+    storageBucket: 'note-vault-eefb1.appspot.com',
+    iosClientId: '1033581757125-s6f18d70d31ek5mf68g7hv4noohs1iad.apps.googleusercontent.com',
     iosBundleId: 'com.example.vendooraMart',
   );
+
 }

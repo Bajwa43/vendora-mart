@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -271,8 +274,34 @@ class AuthService {
   //   }
   // }
 
+// GET IMAGEURL
+  static Future<String> getImageUrl(String filePath) async {
+    try {
+      Reference storageRef = FirebaseStorage.instance.ref().child(filePath);
+      String downloadUrl = await storageRef.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      throw Exception("Error retrieving image: ${e.toString()}");
+    }
+  }
+
+// UPLOADING IMAGE
+  static Future<String> uploadImageToStorage(
+      File? imageFile, String? userCredential, String header) async {
+    try {
+      String fileName = '$header/$userCredential.jpg';
+      Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = storageRef.putFile(imageFile!);
+
+      TaskSnapshot snapshot = await uploadTask;
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      throw Exception("Image upload failed: ${e.toString()}");
+    }
+  }
+
 //  REGISTER
-  static registerUserWithFirebaseAuth(
+  static Future<String?> registerUserWithFirebaseAuth(
       BuildContext context,
       TextEditingController emailController,
       TextEditingController fullNameController,
@@ -329,6 +358,8 @@ class AuthService {
       HelperFunctions.showToast(
           '${userCredential.user!.email} >> is Registerd');
       // print("Full Name Last: ${fullNameController.text}");
+
+      return userCredential.user!.uid;
     } catch (e) {
       fullNameController.clear();
       emailController.clear();

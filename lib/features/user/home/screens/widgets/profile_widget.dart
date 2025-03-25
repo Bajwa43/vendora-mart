@@ -1,14 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/utiles/constants/image_string.dart';
 import 'package:vendoora_mart/utiles/constants/sizes.dart';
 
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({super.key});
+  // final String url;
 
   @override
   Widget build(BuildContext context) {
+    HomeController contr = Get.find();
     return Padding(
       padding: EdgeInsets.only(top: 64.h),
       child: Row(
@@ -16,10 +21,17 @@ class ProfileWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30.sp),
-            child: Container(
-              width: TSizes.profilePictureW,
-              height: TSizes.profilePictureH,
-              child: Image.asset(TImageString.myImage),
+            child: Obx(
+              () => Container(
+                width: TSizes.profilePictureW,
+                height: TSizes.profilePictureH,
+                child: contr.imageUrl.value.isNotEmpty
+                    ? Image.network(
+                        contr.imageUrl.value,
+                        fit: BoxFit.fill,
+                      )
+                    : Image.asset(TImageString.person),
+              ),
             ),
           ),
           Column(

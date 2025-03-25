@@ -41,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement initState
     super.initState();
     if (!kReleaseMode) {
-      _usernameController.text = "farhanali@gmail.com";
-      _passwordController.text = "farhanali";
+      _usernameController.text = "nomanali@gmail.com";
+      _passwordController.text = "nomanali";
     }
   }
 

@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 
 class HomeController extends GetxController {
   final uuid = const Uuid();
+  RxString imageUrl = ''.obs;
   RxList<ProductModel> _listOfProducts = <ProductModel>[].obs;
   List<ProductModel> get listOfProducts => _listOfProducts;
   RxInt currentIndexOfBottomAppBar = 0.obs;
@@ -99,7 +100,9 @@ class HomeController extends GetxController {
 
   /// 📦 **Get List of Products**
   Stream<List<ProductModel>> getProducts() {
-    return HelperFirebase.productInstance.snapshots().map((event) {
+    return HelperFirebase.productInstanceWhichAlreadyPublished
+        .snapshots()
+        .map((event) {
       return event.docs.map((e) => ProductModel.fromMap(e.data())).toList();
     });
   }

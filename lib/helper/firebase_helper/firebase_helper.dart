@@ -19,14 +19,18 @@ class HelperFirebase {
 
   // static
 
-  static var userInstance = FirebaseFirestore.instance.collection('Users');
-  static var addToCartInstance = FirebaseFirestore.instance
-      .collection('Users')
+  static var userInstance =
+      FirebaseFirestore.instance.collection('VenderUsers');
+
+  static var addToCartInstance = HelperFirebase.userInstance
       .doc(homeController.firebaseUser.value?.uid.toString())
       // .doc()
       .collection('Carted');
   static var productInstance =
-      FirebaseFirestore.instance.collection('Products');
+      FirebaseFirestore.instance.collection('VenderProducts');
+
+  static var productInstanceWhichAlreadyPublished =
+      HelperFirebase.productInstance.where('publish', isEqualTo: true);
 
   static publishProduct(
       BuildContext context, String productUid, bool currentStatus) async {
@@ -65,12 +69,12 @@ class HelperFirebase {
     }
   }
 
-  user({required String userId}) {
-    return FirebaseFirestore.instance
-        .collection('user')
-        .doc()
-        .collection(userId)
-        .doc()
-        .collection('tasks');
-  }
+  // user({required String userId}) {
+  //   return FirebaseFirestore.instance
+  //       .collection('user')
+  //       .doc()
+  //       .collection(userId)
+  //       .doc()
+  //       .collection('tasks');
+  // }
 }

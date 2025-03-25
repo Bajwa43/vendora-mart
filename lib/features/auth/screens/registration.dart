@@ -1,11 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:vendoora_mart/features/auth/controllers/registerControler.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
 import 'package:vendoora_mart/helper/enum.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 import 'package:vendoora_mart/services/auth_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -16,7 +20,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isUser = true;
   bool isVendor = false;
-  File? _image;
+  // File? _image;
   File? _shopImage;
   File? _logoImage;
 
@@ -34,38 +38,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String? _selectedTax;
   final List<String> _taxOptions = ['Yes', 'No'];
 
-  void _registerUser() {
-    if (_formKey.currentState!.validate()) {
-      UserType userType = isVendor ? UserType.vendor : UserType.customer;
-
-      UserModel user = UserModel(
-        fullName: isVendor ? null : _fullnameController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-        phone: _phoneController.text,
-        business: isVendor ? _businessNameController.text : null,
-        address: _addressController.text,
-        city: _cityController.text,
-        gstNumber: isVendor ? _gstNumberController.text : null,
-        // imageUrl: _image!.path.toString(),
-        textRegistered: isVendor ? _selectedTax : null,
-        userType: userType.value,
-        // logoUrl: isVendor ? _logoImage!.path.toString() : null,
-        // shopImageUrl: isVendor ? _shopImage!.path.toString() : null,
-        approved: isVendor ? false : null,
-      );
-
-      AuthService.registerUserWithFirebaseAuth(context, _emailController,
-          _fullnameController, _phoneController, _passwordController, user);
-
-      // Clear form fields after registration
-      _fullnameController.clear();
-      _emailController.clear();
-      _phoneController.clear();
-      _passwordController.clear();
-    }
-  }
-
   void onCheckBoxChange(bool? value) {
     setState(() {
       isVendor = value ?? false;
@@ -74,7 +46,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Get.put(RegisterController());
+  }
+
+  @override
   Widget build(BuildContext context) {
+    RegisterController controller = Get.find();
     return Form(
       key: _formKey,
       child: Scaffold(
@@ -92,19 +72,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: InkWell(
-                          onTap: _imagePicker,
-                          child: Container(
-                            width: 200,
-                            height: 200,
-                            color: Colors.blue,
-                            child: _image != null
-                                ? Image.file(
-                                    _image!,
-                                    height: 200,
-                                    width: 200,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Center(child: Text('Select Profile Photo')),
+                          onTap: () => controller.imagePicker(
+                              context, TTextString.profileImage),
+                          child: Obx(
+                            () => Container(
+                              width: 200,
+                              height: 200,
+                              color: Colors.blue,
+                              child: controller.profileImage.value != null
+                                  ? Image.file(
+                                      controller.profileImage.value!,
+                                      height: 200,
+                                      width: 200,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const Center(
+                                      child: Text('Select Profile Photo')),
+                            ),
                           ),
                         ),
                       ),
@@ -112,42 +96,65 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   : Stack(
                       children: [
                         InkWell(
-                          onTap: _shopImagePicker,
-                          child: Container(
-                            color: Colors.blue,
-                            height: 240,
-                            child: Center(
-                                child: Text('Tap to Select Image for Shop')),
+                          onTap: () => controller.imagePicker(
+                              context, TTextString.vendorShopImage),
+                          child: Obx(
+                            () => Container(
+                              color: Colors.blue,
+                              height: 240,
+                              child: controller.vendorImage.value != null
+                                  ? Center(
+                                      child: Image.file(
+                                        controller.vendorImage.value!,
+                                        height: 300,
+                                        width: 300,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : const Center(
+                                      child: Text('Select Profile Photo')),
+                            ),
                           ),
                         ),
                         // ................................................................................LOGO
                         Padding(
-                          padding: EdgeInsets.only(top: 160, left: 20),
+                          padding: const EdgeInsets.only(top: 160, left: 20),
                           child: Row(
                             children: [
                               InkWell(
-                                onTap: _logoPicker,
+                                onTap: () => controller.imagePicker(
+                                    context, TTextString.vendorShopLogo),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    width: 60,
-                                    height: 60,
-                                    color: Colors.grey.shade400,
-                                    child: Center(
-                                      child: Text(
-                                        'Logo',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
+                                  child: Obx(
+                                    () => Container(
+                                      width: 60,
+                                      height: 60,
+                                      color: Colors.grey.shade400,
+                                      child: controller.vendorLogo.value != null
+                                          ? Image.file(
+                                              controller.vendorLogo.value!,
+                                              height: 300,
+                                              width: 300,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : const Center(
+                                              child: Text(
+                                                'Logo',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
                                 _businessNameController.text,
-                                style: TextStyle(color: Colors.black),
+                                style: const TextStyle(color: Colors.black),
                               )
                             ],
                           ),
@@ -164,7 +171,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ? TextFormField(
                             onChanged: (value) => setState(() {}),
                             controller: _businessNameController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Business Name',
                               border: OutlineInputBorder(),
                             ),
@@ -177,7 +184,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           )
                         : TextFormField(
                             controller: _fullnameController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Fullname',
                               border: OutlineInputBorder(),
                             ),
@@ -188,12 +195,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               return null;
                             },
                           ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     // Email
                     TextFormField(
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email',
                         border: OutlineInputBorder(),
                       ),
@@ -208,12 +215,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     // Phone Number
                     TextFormField(
                       controller: _phoneController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Phone Number',
                         border: OutlineInputBorder(),
                       ),
@@ -228,12 +235,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     // Password
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(),
                       ),
@@ -248,14 +255,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     isVendor
                         ? Column(
                             children: [
                               DropdownButtonFormField<String>(
                                 value: _selectedTax,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Tax Registered',
                                   border: OutlineInputBorder(),
                                 ),
@@ -277,23 +284,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   return null;
                                 },
                               ),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
 
                               // GST Number
                               TextFormField(
                                 controller: _gstNumberController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'GST Number (Optional)',
                                   border: OutlineInputBorder(),
                                 ),
                                 keyboardType: TextInputType.number,
                               ),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
 
                               // Address
                               TextFormField(
                                 controller: _addressController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Address',
                                   border: OutlineInputBorder(),
                                 ),
@@ -304,12 +311,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   return null;
                                 },
                               ),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
 
                               // City
                               TextFormField(
                                 controller: _cityController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'City',
                                   border: OutlineInputBorder(),
                                 ),
@@ -320,22 +327,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   return null;
                                 },
                               ),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                             ],
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
 
                     // Checkbox for Vendor
                     CheckboxListTile(
                       value: isVendor,
                       onChanged: onCheckBoxChange,
-                      title: Text('Are you a Vendor?'),
+                      title: const Text('Are you a Vendor?'),
                     ),
 
                     // Register Button
                     ElevatedButton(
-                      onPressed: _registerUser,
-                      child: Text('Register'),
+                      onPressed: () => controller.registerUser(
+                          context: context,
+                          fullnameController: _fullnameController,
+                          emailController: _emailController,
+                          phoneController: _phoneController,
+                          passwordController: _passwordController,
+                          businessNameController: _businessNameController,
+                          addressController: _addressController,
+                          cityController: _cityController,
+                          gstNumberController: _gstNumberController,
+                          isVendor: isVendor,
+                          selectedTax: _selectedTax,
+                          formKey: _formKey),
+                      child: const Text('Register'),
                     ),
                   ],
                 ),
@@ -345,32 +364,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _imagePicker() async {
-    print('object');
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
-      // final XFile? pickedFile = await picker.pickImage(
-      // source: ImageSource.gallery,\
-      //   maxWidth: 1080,
-      //   maxHeight: 1080,
-      //   imageQuality: 80,
-      // );
-
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick image: $e')),
-      );
-    }
   }
 
   void _logoPicker() {}

@@ -7,6 +7,10 @@ class TTextString {
   static const clotheCategory = 'Clothing';
   static const footwearCategory = 'Footwear';
 
+  static const profileImage = 'profile_images';
+  static const vendorShopImage = 'shope_image';
+  static const vendorShopLogo = 'shope_logo';
+
 //   static const String onBoardingTitle1 = 'Choose your product';
 //   static const String onBoardingTitle2 = 'Select Payment Method';
 //   static const String onBoardingTitle3 = 'Deliver at your Door Step';

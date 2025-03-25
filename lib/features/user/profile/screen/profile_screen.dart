@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
+import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
 import 'package:vendoora_mart/features/user/profile/widget/profile_containers_widget.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
@@ -35,6 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final ProductCartController controller = Get.find();
+    final HomeController homeController = Get.find();
 
     return Scaffold(
       body: SafeArea(
@@ -115,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         AuthService.logOut(context);
                         HelperFunctions.navigateToScreen(
                             context: context, screen: LoginScreen());
+                        homeController.imageUrl.value = '';
                       } catch (e) {
                         HelperFunctions.showToast('Network Issue');
                       }

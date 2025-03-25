@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ import 'package:vendoora_mart/utiles/constants/colors.dart';
 import 'package:vendoora_mart/utiles/constants/sizes.dart';
 import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
+import '../../../auth/domain/models/user_model.dart';
 import 'widgets/profile_widget.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -27,6 +29,7 @@ class UserHomeScreen extends StatefulWidget {
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
   late TextEditingController searchController;
+  // String? url;
   @override
   void initState() {
     // TODO: implement initState
@@ -34,11 +37,41 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     searchController = TextEditingController();
     Get.put(HomeController()); // Register  Controller
     Get.put(ProductCartController());
+    _loadImage();
+    // print('>>>>>>>>>>>>>>>>>>>>>>>>>>$url');
+  }
+
+  Future<void> _loadImage() async {
+    HomeController contro = Get.find();
+    //   String uid = FirebaseAuth.instance.currentUser!.uid;
+    //   DocumentSnapshot userDoc =
+    //       await HelperFirebase.userInstance.doc(uid).get();
+
+    //   if (userDoc.exists) {
+    //     UserModel profileUrl =
+    //         UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+    //     url = profileUrl.imageUrl;
+
+    //     print('/////////////////////////////////.');
+    //     print('/////////////$url.');
+    //   } else {
+    //     print('User does not exist.');
+    //     return null;
+    //   }
+    // } catch (e) {
+    //   print('Error fetching user data: $e');
+    //   return null;
+    // }
+
+    String url = await AuthService.getImageUrl(
+        'profile_images/${FirebaseAuth.instance.currentUser!.uid}.jpg');
+    contro.imageUrl.value = url;
   }
 
   @override
   Widget build(BuildContext context) {
     final HomeController homeController = Get.find();
+
     List<Widget> homeScreens = [
       SingleChildScrollView(
         child: Center(

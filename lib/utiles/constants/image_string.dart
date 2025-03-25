@@ -10,6 +10,7 @@ class TImageString {
   static String coinLogo = 'assets/images/coin.png';
   static String paypalLogo = 'assets/images/paypal.png';
   static String creditCardLogo = 'assets/images/creditCard.png';
+  static String person = 'assets/images/brownboy*.png';
 
   // static String onBoarding1 = "assets/images/on_boarding_images/homeIcon.gif";
   // static String onBoarding2 =
