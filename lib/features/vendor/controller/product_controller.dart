@@ -16,8 +16,8 @@ class ProductController {
   static String? selectedGender;
   static String? selectedFashionItem;
 
-  // IMGAES GETS
-  static final List<File> images = [];
+  // IMAGES GETS
+  static List<String> images = [];
 
   // Sizes
   static List<String?> selectedSizeList = [];

@@ -2,35 +2,15 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:get/get.dart';
-// import 'package:get/get.dart';
-// import 'package:get/get_core/src/get_main.dart';
-// import 'package:todo_app/Dialogs/dialog.dart';
-// import 'package:todo_app/Dialogs/inform_dialog.dart';
-// import 'package:todo_app/data/Constants/colors.dart';
-// import 'package:todo_app/data/Constants/size.dart';
-// import 'package:todo_app/data/helpers/firebase_helper/firebase_helper.dart';
-// import 'package:todo_app/data/helpers/helper_functions.dart';
-// import 'package:todo_app/models/HomeTaskModel/home_task_Model.dart';
-// import 'package:todo_app/models/user_model.dart/user_model.dart';
-// import 'package:todo_app/modules/home_module/home_screen.dart';
-// import 'package:todo_app/services/auth_exception_handler.dart';
-// import 'package:todo_app/widgets/txtWidget.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
 import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
 import 'package:vendoora_mart/helper/enum.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
-import 'package:vendoora_mart/services/auth_exception_handler.dart';
-// import '../features/auth/domain/models/vendor_model.dart';
-import '../features/vendor/add_Product/vender_add_item_screen.dart';
 
 class AuthService {
   static logOut(BuildContext context) async {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendoora_mart/features/auth/auth_wraper.dart';
@@ -7,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 import 'package:vendoora_mart/services/auth_service.dart';
+import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
 class UploadDataWidget extends StatelessWidget {
   const UploadDataWidget({super.key});
@@ -37,7 +40,8 @@ class UploadDataWidget extends StatelessWidget {
       var venderId = FirebaseAuth.instance.currentUser!.uid;
 
       ProductModel productData = ProductModel(
-        images: [],
+        // images: ProductController.images,
+        images: ProductController.images,
         venderUid: venderId,
         productUid: productId,
         publish: false,
@@ -71,6 +75,13 @@ class UploadDataWidget extends StatelessWidget {
           ProductController.selectedSizeList = [];
         },
       );
+
+      for (var i = 0; i < ProductController.images.length; i++) {
+        await AuthService.uploadImageToStorage(
+            File(ProductController.images[i]),
+            '${FirebaseAuth.instance.currentUser!.uid}/${i + 1}',
+            TTextString.productImages);
+      }
 
       print('Product uploaded successfully');
     } catch (e) {

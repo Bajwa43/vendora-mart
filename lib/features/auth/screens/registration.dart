@@ -21,8 +21,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool isUser = true;
   bool isVendor = false;
   // File? _image;
-  File? _shopImage;
-  File? _logoImage;
+  // File? _shopImage;
+  // File? _logoImage;
 
   // Controllers for text fields
   final TextEditingController _fullnameController = TextEditingController();
@@ -47,7 +47,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Get.put(RegisterController());
   }
@@ -59,7 +58,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       key: _formKey,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Register'),
+          title: const Text('Register'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -68,7 +67,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             children: [
               !isVendor
                   ? Padding(
-                      padding: EdgeInsets.all(40),
+                      padding: const EdgeInsets.all(40),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: InkWell(

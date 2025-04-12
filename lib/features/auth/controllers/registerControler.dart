@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
 import 'package:vendoora_mart/helper/enum.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
+import 'package:vendoora_mart/helper/helper_functions.dart';
 import 'package:vendoora_mart/services/auth_service.dart';
 import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
@@ -31,17 +32,20 @@ class RegisterController extends GetxController {
         switch (imageType) {
           case TTextString.profileImage:
             profileImage.value = File(pickedFile.path);
-
+            print(';;;;;;;;;;;;;;;;;;;;;;$imageType');
             break;
           case TTextString.vendorShopImage:
             vendorImage.value = File(pickedFile.path);
+            print(';;;;;;;;;;;;;;;;;;;;;;$imageType');
 
             break;
           case TTextString.vendorShopLogo:
             vendorLogo.value = File(pickedFile.path);
+            print(';;;;;;;;;;;;;;;;;;;;;;$imageType');
 
             break;
           default:
+            print(';;;;;;;Default;;;;;;;;;;;;;;;$imageType');
         }
       }
     } catch (e) {
@@ -72,7 +76,7 @@ class RegisterController extends GetxController {
       UserModel user = UserModel(
           imageUrl: !isVendor
               ? profileImage.value!.path
-              : '', // Handle image upload if needed
+              : vendorLogo.value!.path, // Handle image upload if needed
           fullName: isVendor ? null : fullnameController.text,
           email: emailController.text,
           password: passwordController.text,
@@ -102,19 +106,31 @@ class RegisterController extends GetxController {
           await AuthService.uploadImageToStorage(
               profileImage.value, userCredentual, TTextString.profileImage);
         } else {
-          if (vendorImage.value != null) {
-            await AuthService.uploadImageToStorage(profileImage.value,
-                userCredentual, TTextString.vendorShopImage);
-            await AuthService.uploadImageToStorage(
-                profileImage.value, userCredentual, TTextString.vendorShopLogo);
-          }
+          HelperFunctions.showToast('Image not selected');
         }
 
-        // Clear form fields after registration
-        fullnameController.clear();
-        emailController.clear();
-        phoneController.clear();
-        passwordController.clear();
+        // // Clear form fields after registration
+        // fullnameController.clear();
+        // emailController.clear();
+        // phoneController.clear();
+        // passwordController.clear();
+      } else if (isVendor) {
+        if (vendorImage.value != null && vendorLogo.value != null) {
+          await AuthService.uploadImageToStorage(
+              profileImage.value, userCredentual, TTextString.vendorShopImage);
+          await AuthService.uploadImageToStorage(
+              profileImage.value, userCredentual, TTextString.vendorShopLogo);
+        } else {
+          HelperFunctions.showToast('Images And Logo not selected');
+        }
+
+        // // Clear form fields after registration
+        // fullnameController.clear();
+        // emailController.clear();
+        // phoneController.clear();
+        // passwordController.clear();
+      } else {
+        HelperFunctions.showToast('Error while uploading Image To Storage.');
       }
     }
   }

@@ -49,10 +49,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
-                child: SizedBox(
+                child: Obx(
+                  () => SizedBox(
                     width: 80.w,
                     height: 80.h,
-                    child: Image.asset(TImageString.myImage)),
+                    child: homeController.imageUrl.value.isNotEmpty
+                        ? Image.network(
+                            homeController.imageUrl.value,
+                            fit: BoxFit.fill,
+                          )
+                        : Image.asset(TImageString.person),
+                  ),
+                ),
               ),
               // Text(
               //   user.fullName.toString(),

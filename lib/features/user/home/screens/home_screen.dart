@@ -10,6 +10,7 @@ import 'package:vendoora_mart/features/user/home/screens/widgets/ads_scroller_wi
 import 'package:vendoora_mart/features/user/home/screens/widgets/product_list_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/search_widget.dart';
 import 'package:vendoora_mart/features/user/profile/screen/profile_screen.dart';
+import 'package:vendoora_mart/features/vendor/controller/product_controller.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 import 'package:vendoora_mart/services/auth_service.dart';
@@ -64,7 +65,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     // }
 
     String url = await AuthService.getImageUrl(
-        'profile_images/${FirebaseAuth.instance.currentUser!.uid}.jpg');
+        '${TTextString.profileImage}/${FirebaseAuth.instance.currentUser!.uid}.jpg');
     contro.imageUrl.value = url;
   }
 

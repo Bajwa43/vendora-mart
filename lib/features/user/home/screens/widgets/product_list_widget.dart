@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,10 +6,13 @@ import 'package:vendoora_mart/features/user/home/controller/home_controller.dart
 import 'package:vendoora_mart/features/user/home/screens/see_all_products_screen.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/product_home_card_wdget.dart';
 import 'package:vendoora_mart/features/vendor/add_Product/screens/edit_product/widget/product_cart_widget.dart';
+import 'package:vendoora_mart/features/vendor/controller/product_controller.dart';
 import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
+import 'package:vendoora_mart/services/auth_service.dart';
 import 'package:vendoora_mart/utiles/constants/colors.dart';
 import 'package:vendoora_mart/utiles/constants/sizes.dart';
+import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
 class ProductListWidget extends StatefulWidget {
   const ProductListWidget({super.key, required this.lableName});
@@ -67,6 +71,25 @@ class _ProductListWidgetState extends State<ProductListWidget> {
                   scrollDirection: Axis.horizontal,
                   itemCount: list.length,
                   itemBuilder: (context, index) {
+                    List<String> listOfImages;
+
+                    Future<List<String>> _loadProductImages(int index) async {
+                      HomeController homeController = Get.find();
+                      List<String> images = [];
+
+                      for (var i = 0;
+                          i <
+                              homeController
+                                  .listOfProducts[index].images.length;
+                          i++) {
+                        images[i] = await AuthService.getImageUrl(
+                            '${TTextString.productImages}/${FirebaseAuth.instance.currentUser!.uid}/${i + 1}.jpg');
+                      }
+
+                      return images;
+                    }
+
+                    listOfImages = _loadProductImages(index);
                     return ProductHomeCardWidget(
                       onTapFav: () => controller
                           .onToggalFavt(list[index].productUid.toString()),

@@ -18,7 +18,8 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
 
     if (image != null) {
       setState(() {
-        ProductController.images.add(File(image.path));
+        // ProductController.images.add(File(image.path));
+        ProductController.images.add(File(image.path).path.toString());
       });
     }
   }
@@ -60,7 +61,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.file(
-                    ProductController.images[index - 1],
+                    File(ProductController.images[index - 1]),
                     fit: BoxFit.cover,
                   ),
                 ),

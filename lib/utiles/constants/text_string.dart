@@ -8,6 +8,7 @@ class TTextString {
   static const footwearCategory = 'Footwear';
 
   static const profileImage = 'profile_images';
+  static const productImages = 'product_images';
   static const vendorShopImage = 'shope_image';
   static const vendorShopLogo = 'shope_logo';
 

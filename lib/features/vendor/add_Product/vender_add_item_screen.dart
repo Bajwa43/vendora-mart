@@ -31,7 +31,6 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
       DocumentSnapshot userData = await HelperFirebase.userInstance
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-
       // Update state with the fetched data
       setState(() {
         userAllData = userData;
