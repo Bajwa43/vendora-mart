@@ -40,7 +40,6 @@ class ProductController {
     if (descriptionController.text.isEmpty) return 'Description is required';
     if (images.isEmpty) return 'At least one image is required';
     if (selectedSizeList.isEmpty) return 'At least one size is required';
-
     return null; // All inputs are valid
   }
 }

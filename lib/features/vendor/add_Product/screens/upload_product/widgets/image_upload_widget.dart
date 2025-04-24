@@ -75,7 +75,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
                       });
                     },
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.black54,
                         shape: BoxShape.circle,
                       ),

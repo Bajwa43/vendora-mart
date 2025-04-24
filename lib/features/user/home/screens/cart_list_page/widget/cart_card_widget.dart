@@ -37,8 +37,8 @@ class CartCardWidget extends StatelessWidget {
                   child: SizedBox(
                     width: 126.w,
                     height: 99.h,
-                    child: Image.asset(
-                      TImageString.greyShoeImage,
+                    child: Image.network(
+                      model.image,
                       fit: BoxFit.fill,
                     ),
                   ),

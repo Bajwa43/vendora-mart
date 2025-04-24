@@ -71,26 +71,21 @@ class _ProductListWidgetState extends State<ProductListWidget> {
                   scrollDirection: Axis.horizontal,
                   itemCount: list.length,
                   itemBuilder: (context, index) {
-                    List<String> listOfImages;
+                    print('Enter in Builder');
+                    // List<String> listOfImages = [];
+                    // HomeController homeController = Get.find();
 
-                    Future<List<String>> _loadProductImages(int index) async {
-                      HomeController homeController = Get.find();
-                      List<String> images = [];
+                    // homeController.loadProductImages(index, list).then(
+                    //   (value) {
+                    //     listOfImages = value.toList();
+                    //   },
+                    // );
+                    // String? imageUrl = controller
+                    //     .productImageUrls[list[index].productUid ?? ''];
 
-                      for (var i = 0;
-                          i <
-                              homeController
-                                  .listOfProducts[index].images.length;
-                          i++) {
-                        images[i] = await AuthService.getImageUrl(
-                            '${TTextString.productImages}/${FirebaseAuth.instance.currentUser!.uid}/${i + 1}.jpg');
-                      }
-
-                      return images;
-                    }
-
-                    listOfImages = _loadProductImages(index);
+                    // listOfImages = _loadProductImages(index);
                     return ProductHomeCardWidget(
+                      images: list[index].images,
                       onTapFav: () => controller
                           .onToggalFavt(list[index].productUid.toString()),
                       heightOfCard: 99.h,

@@ -5,12 +5,13 @@ import 'package:get/get.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/carted_model.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/wishlist_model.dart';
 import 'package:vendoora_mart/features/user/home/screens/cart_list_page/cart_list_page.dart';
-import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
+import 'package:vendoora_mart/services/auth_service.dart';
 import 'package:vendoora_mart/utiles/constants/image_string.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
 class HomeController extends GetxController {
   final uuid = const Uuid();
@@ -23,6 +24,9 @@ class HomeController extends GetxController {
   RxMap<String, bool> favoriteProducts = <String, bool>{}.obs;
 
   RxString selectedSize = ''.obs;
+  RxMap<String, String> productImageUrls = <String, String>{}.obs;
+  RxBool cashPayment = true.obs;
+  RxBool debitCardPayment = false.obs;
 
   void selectSize(String size) {
     selectedSize.value = size;
@@ -35,10 +39,29 @@ class HomeController extends GetxController {
     loadFavorites();
   }
 
+  void preloadFirstImages() async {
+    for (var product in listOfProducts) {
+      try {
+        if (product.images.isNotEmpty) {
+          String imagePath =
+              '${TTextString.productImages}/${product.productUid}/1.jpg';
+          String imageUrl = await AuthService.getImageUrl(imagePath);
+          productImageUrls[product.productUid!] = imageUrl;
+        }
+      } catch (e) {
+        print("⚠️ Error loading image for ${product.productUid}: $e");
+        // Optionally, assign a placeholder image or leave it empty
+        productImageUrls[product.productUid!] = ""; // or some default asset url
+      }
+    }
+    update();
+  }
+
   void addToCart(BuildContext context, ProductModel product) async {
     String docId = uuid.v4(); // Generate a unique ID
     CartedModel cartedModel = CartedModel(
       cartedId: docId,
+      productId: product.productUid.toString(),
       productName: product.productName.toString(),
       price: product.price.toString(),
       size: selectedSize.value,
@@ -63,12 +86,10 @@ class HomeController extends GetxController {
   /// 🛒 **Load User's Favorites from Firestore**
   void loadFavorites() async {
     if (firebaseUser.value == null) return;
-
     var snapshot = await HelperFirebase.userInstance
         .doc(firebaseUser.value!.uid)
         .collection('wishlist')
         .get();
-
     for (var doc in snapshot.docs) {
       favoriteProducts[doc.id] =
           true; // setting the value (true) in Key (doc.id)
@@ -79,12 +100,10 @@ class HomeController extends GetxController {
   /// ❤️ **Toggle Favorite Status**
   Future<void> onToggalFavt(String productId) async {
     if (firebaseUser.value == null) return;
-
     final wishlistRef = HelperFirebase.userInstance
         .doc(firebaseUser.value!.uid)
         .collection('wishlist')
         .doc(productId);
-
     if (favoriteProducts.containsKey(productId)) {
       favoriteProducts.remove(productId);
       await wishlistRef.delete(); // Remove from Firestore
@@ -94,7 +113,6 @@ class HomeController extends GetxController {
           WishlistModel(productId: productId, addedAt: Timestamp.now())
               .toMap());
     }
-
     update(); // Refresh UI
   }
 
@@ -130,4 +148,16 @@ class HomeController extends GetxController {
       ]),
     ),
   ];
+
+  // Future<List<String>> loadProductImages(
+  //     int index, List<ProductModel> list) async {
+  //   // HomeController homeController = Get.find();
+  //   List<String> images = [];
+
+  //   for (var i = 0; i < list[index].images.length; i++) {
+  //     images[i] = await AuthService.getImageUrl(
+  //         '${TTextString.productImages}/${list[index].productUid}/${i + 1}.jpg');
+  //   }
+  //   return images;
+  // }
 }

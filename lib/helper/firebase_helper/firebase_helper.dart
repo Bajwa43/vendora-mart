@@ -1,12 +1,20 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
+import 'package:vendoora_mart/features/vendor/controller/product_controller.dart';
+import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
+import 'package:vendoora_mart/services/auth_service.dart';
+import 'package:vendoora_mart/utiles/constants/text_string.dart';
 
 class HelperFirebase {
   static HomeController homeController = Get.find();
@@ -31,6 +39,15 @@ class HelperFirebase {
 
   static var productInstanceWhichAlreadyPublished =
       HelperFirebase.productInstance.where('publish', isEqualTo: true);
+
+  static var orderConformInstance =
+      FirebaseFirestore.instance.collection('OrderConform');
+
+  static var deleteCartedItemInstance = HelperFirebase.userInstance
+      .doc(homeController.firebaseUser.value?.uid.toString())
+      .collection('Carted');
+  // .doc(homeController.firebaseUser.value?.uid.toString())
+  // .collection('Carted');
 
   static publishProduct(
       BuildContext context, String productUid, bool currentStatus) async {
@@ -66,6 +83,81 @@ class HelperFirebase {
       HelperFunctions.showToast('Product Delete successfully!');
     } catch (e) {
       HelperFunctions.showToast(e.toString());
+    }
+  }
+
+  static Future uploadAllData(BuildContext context) async {
+    String? validationMessage = ProductController.validateInputs();
+    if (validationMessage != null) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(validationMessage)),
+      );
+      return;
+    }
+
+    String productId = const Uuid().v4(); // Generate unique ID for the product
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator.adaptive(
+            valueColor: AlwaysStoppedAnimation(Colors.amberAccent),
+          ),
+        ),
+      );
+
+      var venderId = FirebaseAuth.instance.currentUser!.uid;
+
+      ProductModel productData = ProductModel(
+        // images: ProductController.images,
+        images: ProductController.images,
+        venderUid: venderId,
+        productUid: productId,
+        publish: false,
+        productName: ProductController.productNameController.text,
+        price: ProductController.priceController.text,
+        fashionCategory: ProductController.selectedFashionCategory,
+        gender: ProductController.selectedGender,
+        fashionItem: ProductController.selectedFashionItem,
+        keyFeatures: ProductController.keyFeaturesController.text,
+        description: ProductController.descriptionController.text,
+        sizes: ProductController.selectedSizeList.cast<String>(),
+      );
+
+      for (var i = 0; i < ProductController.images.length; i++) {
+        productData.images[i] = await AuthService.uploadImageToStorage(
+            File(ProductController.images[i]),
+            '$productId/${i + 1}',
+            TTextString.productImages);
+      }
+
+      // Upload product to Firestore
+      await HelperFirebase.productInstance
+          .doc(productId)
+          .set(productData.toMap())
+          .then(
+        (value) {
+          HelperFunctions.popBack(context: context);
+          ProductController.images = [];
+          HelperFunctions.showToast('Product uploaded successfully');
+
+          ProductController.productNameController.text = '';
+          ProductController.priceController.text = '';
+          ProductController.descriptionController.text = '';
+          ProductController.keyFeaturesController.text = '';
+
+          // ProductController.selectedFashionCategory = '';
+          // ProductController.selectedFashionItem = '';
+          // ProductController.selectedGender = '';
+          ProductController.selectedSizeList = [];
+        },
+      );
+    } catch (e) {
+      print('Error uploading product: $e');
+      throw Exception('Failed to upload product: $e');
     }
   }
 

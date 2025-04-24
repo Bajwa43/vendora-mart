@@ -55,6 +55,7 @@ class _SeeAllProductsScreenState extends State<SeeAllProductsScreen> {
               final product = list[index];
 
               return ProductHomeCardWidget(
+                images: list[index].images,
                 onTapFav: () =>
                     homeController.onToggalFavt(product.productUid.toString()),
                 isForhomeCard: false,

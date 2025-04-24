@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vendoora_mart/features/auth/screens/dayn_night_animate.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
 import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
@@ -67,7 +68,7 @@ class AuthWrapper extends StatelessWidget {
             },
           );
         } else {
-          return const LoginScreen();
+          return const DayAndNightLoginAnimation();
         }
       },
     );

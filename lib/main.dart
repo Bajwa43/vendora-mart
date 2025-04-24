@@ -11,12 +11,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // Get.lazyPut(
-  //   () {
-  //     ProductCartController();
-  //   },
-  // );
-  // Get.put(ProductCartController());
 
   runApp(MyApp());
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/utiles/constants/colors.dart';
 import 'package:vendoora_mart/utiles/constants/image_string.dart';
 import 'package:vendoora_mart/utiles/constants/sizes.dart';
@@ -10,6 +12,7 @@ class OrderPaymentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeController homeController = Get.find();
     return SizedBox(
       width: TSizes.fullContainerW,
       child: Column(
@@ -48,11 +51,23 @@ class OrderPaymentWidget extends StatelessWidget {
                     style: TTextStyle.OrderPaymentTextStyle,
                   )),
               const Spacer(),
-              Checkbox(
-                  side: BorderSide(color: TColors.buttonPrimory, width: 2),
-                  shape: CircleBorder(),
-                  value: false,
-                  onChanged: (val) {})
+              Obx(
+                () => Checkbox(
+                    side: BorderSide(color: TColors.buttonPrimory, width: 2),
+                    shape: CircleBorder(),
+                    value: homeController.debitCardPayment.value,
+                    onChanged: (val) {
+                      if (homeController.debitCardPayment.value) {
+                        homeController.debitCardPayment.value = false;
+                        // homeController.cashPayment.value=
+                      } else {
+                        homeController.debitCardPayment.value = true;
+                        homeController.cashPayment.value = false;
+                      }
+
+                      // homeController.debitCardPayment.value ? val! : val!;
+                    }),
+              )
             ],
           ),
           Row(
@@ -66,11 +81,21 @@ class OrderPaymentWidget extends StatelessWidget {
                     style: TTextStyle.OrderPaymentTextStyle,
                   )),
               const Spacer(),
-              Checkbox(
-                  side: BorderSide(color: TColors.buttonPrimory, width: 2),
-                  shape: CircleBorder(),
-                  value: false,
-                  onChanged: (val) {})
+              Obx(
+                () => Checkbox(
+                    side: BorderSide(color: TColors.buttonPrimory, width: 2),
+                    shape: CircleBorder(),
+                    value: homeController.cashPayment.value,
+                    onChanged: (val) {
+                      if (homeController.cashPayment.value) {
+                        homeController.cashPayment.value = false;
+                        // homeController.cashPayment.value=
+                      } else {
+                        homeController.cashPayment.value = true;
+                        homeController.debitCardPayment.value = false;
+                      }
+                    }),
+              )
             ],
           ),
         ],

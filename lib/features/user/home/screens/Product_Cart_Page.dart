@@ -137,6 +137,9 @@ class _ProductCartPageState extends State<ProductCartPage> {
                     SizedBox(
                       height: TSizes.padbttextLabel,
                     ),
+
+                    // BUTTON TO NAVIGATE
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -182,8 +185,8 @@ class _ProductCartPageState extends State<ProductCartPage> {
                         bottomLeft: Radius.circular(20.sp),
                         bottomRight: Radius.circular(20.sp),
                       ),
-                      child: Image.asset(
-                        TImageString.greyShoeImage,
+                      child: Image.network(
+                        widget.product.images.last,
                         fit: BoxFit.fill,
                       ),
                     ),

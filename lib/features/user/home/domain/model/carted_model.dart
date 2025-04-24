@@ -2,15 +2,17 @@
 import 'dart:convert';
 
 class CartedModel {
-  String cartedId;
-  String image;
-  String productName;
-  String price;
-  String size;
-  String noOfProduct;
-  String categoryType;
+  final String cartedId;
+  final String productId;
+  final String image;
+  final String productName;
+  final String price;
+  final String size;
+  final String noOfProduct;
+  final String categoryType;
   CartedModel({
     required this.cartedId,
+    required this.productId,
     required this.image,
     required this.productName,
     required this.price,
@@ -20,6 +22,7 @@ class CartedModel {
   });
 
   CartedModel copyWith({
+    String? cartedId,
     String? productId,
     String? image,
     String? productName,
@@ -29,7 +32,8 @@ class CartedModel {
     String? categoryType,
   }) {
     return CartedModel(
-      cartedId: productId ?? this.cartedId,
+      cartedId: cartedId ?? this.cartedId,
+      productId: productId ?? this.productId,
       image: image ?? this.image,
       productName: productName ?? this.productName,
       price: price ?? this.price,
@@ -41,7 +45,8 @@ class CartedModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'productId': cartedId,
+      'cartedId': cartedId,
+      'productId': productId,
       'image': image,
       'productName': productName,
       'price': price,
@@ -53,7 +58,8 @@ class CartedModel {
 
   factory CartedModel.fromMap(Map<String, dynamic> map) {
     return CartedModel(
-      cartedId: map['productId'] as String,
+      cartedId: map['cartedId'] as String,
+      productId: map['productId'] as String,
       image: map['image'] as String,
       productName: map['productName'] as String,
       price: map['price'] as String,
@@ -70,7 +76,7 @@ class CartedModel {
 
   @override
   String toString() {
-    return 'CartedModel(productId: $cartedId, image: $image, productName: $productName, price: $price, size: $size, noOfProduct: $noOfProduct, categoryType: $categoryType)';
+    return 'CartedModel(cartedId: $cartedId, productId: $productId, image: $image, productName: $productName, price: $price, size: $size, noOfProduct: $noOfProduct, categoryType: $categoryType)';
   }
 
   @override
@@ -78,6 +84,7 @@ class CartedModel {
     if (identical(this, other)) return true;
 
     return other.cartedId == cartedId &&
+        other.productId == productId &&
         other.image == image &&
         other.productName == productName &&
         other.price == price &&
@@ -89,6 +96,7 @@ class CartedModel {
   @override
   int get hashCode {
     return cartedId.hashCode ^
+        productId.hashCode ^
         image.hashCode ^
         productName.hashCode ^
         price.hashCode ^

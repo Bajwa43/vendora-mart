@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
+import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/carted_model.dart';
+import 'package:vendoora_mart/features/user/home/domain/model/order/order_conform_model.dart';
+import 'package:vendoora_mart/features/user/home/domain/model/order/order_item_model.dart';
 import 'package:vendoora_mart/features/user/home/screens/cart_list_page/screen/check_out_page.dart';
+import 'package:vendoora_mart/features/user/home/screens/cart_list_page/screen/checkout_receipt.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 
@@ -17,7 +23,11 @@ class ProductCartController extends GetxController {
   RxDouble deliveryCharges = 2.0.obs;
   RxDouble total = 0.0.obs;
 
+  HomeController hConroller = Get.find();
+
   UserModel? userObj;
+  var uuid = Uuid();
+  // return uuid.v4(); //
 
   // RxBool isCheckOut = true.obs;
 
@@ -34,6 +44,61 @@ class ProductCartController extends GetxController {
         topPosition = (-300.0).obs;
       },
     );
+  }
+
+  void toggleCartAnimation() {
+    if (topPosition.value == 0.0) {
+      topPosition.value = -300.0; // Move out of the screen
+    } else {
+      topPosition.value = 0.0; // Move to its final position
+    }
+  }
+
+  void orderCheckOutCompletion(BuildContext context) async {
+    List<OrderItemModel> orderItems = cartProduct.map(
+      (e) {
+        String orderItemID = uuid.v1();
+        return OrderItemModel(
+            orderItemID: orderItemID,
+            productID: e.productId,
+            quantityOfProduct: e.noOfProduct);
+      },
+    ).toList();
+
+    String userID = FirebaseAuth.instance.currentUser!.uid.toString();
+    String orderID = uuid.v1();
+    OrderConformModel orderConformModel = OrderConformModel(
+        orderID: orderID,
+        userID: userID,
+        orderItem: orderItems,
+        orderDate: Timestamp.now(),
+        paymentMethod: hConroller.cashPayment.value ? 'Cash' : 'Debit Card',
+        totalAmount: total.value);
+
+    HelperFunctions.showBottomSheet(Get.context!);
+
+    final cartedCollection = HelperFirebase.deleteCartedItemInstance;
+
+    final snapshot = await cartedCollection.get();
+
+    for (final doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+    hConroller.cashPayment.value = true;
+    hConroller.debitCardPayment.value = false;
+
+    HelperFirebase.orderConformInstance.doc(orderID).set(
+          orderConformModel.toMap(),
+        );
+
+    HelperFunctions.popBack(context: context);
+
+    HelperFunctions.showToast('Order Placed Successfully');
+    HelperFunctions.navigateToScreen(
+        context: context,
+        screen: ReceiptScreen(
+          order: orderConformModel,
+        ));
   }
 
   void calculateSubtotal() {

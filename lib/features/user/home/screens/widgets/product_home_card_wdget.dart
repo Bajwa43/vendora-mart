@@ -21,7 +21,8 @@ class ProductHomeCardWidget extends StatelessWidget {
       required this.widthOfCard,
       this.isForhomeCard = true,
       this.onTap,
-      this.onTapFav});
+      this.onTapFav,
+      required this.images});
 
   final ProductModel product;
   final Function()? onTap;
@@ -33,6 +34,7 @@ class ProductHomeCardWidget extends StatelessWidget {
   final double heightOfCard;
   final double widthOfCard;
   final bool isForhomeCard;
+  final List<String> images;
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +56,10 @@ class ProductHomeCardWidget extends StatelessWidget {
                   child: SizedBox(
                     width: widthOfCard,
                     height: heightOfCard,
-                    child: Image.asset(TImageString.greyShoeImage,
-                        fit: BoxFit.fill),
+                    child: images.isEmpty || images.first.isEmpty
+                        ? Image.asset(TImageString.greyShoeImage,
+                            fit: BoxFit.fill)
+                        : Image.network(images.first),
                   ),
                 ),
                 Padding(
