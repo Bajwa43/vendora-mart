@@ -190,7 +190,7 @@ class _DayAndNightLoginAnimationState extends State<DayAndNightLoginAnimation> {
           Positioned(
               top: heightOfScreen * 0.25,
               left: widthOfScreen * 0.1,
-              child: Container(
+              child: SizedBox(
                 height: heightOfScreen * 0.6,
                 width: widthOfScreen * 0.8,
                 child: const ProfileCard(),

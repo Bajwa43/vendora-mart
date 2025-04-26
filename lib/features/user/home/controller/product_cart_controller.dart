@@ -70,6 +70,7 @@ class ProductCartController extends GetxController {
     OrderConformModel orderConformModel = OrderConformModel(
         orderID: orderID,
         userID: userID,
+        paymentSatus: hConroller.cashPayment.value ? 'Pending' : 'Paid',
         orderItem: orderItems,
         orderDate: Timestamp.now(),
         paymentMethod: hConroller.cashPayment.value ? 'Cash' : 'Debit Card',
@@ -91,13 +92,19 @@ class ProductCartController extends GetxController {
           orderConformModel.toMap(),
         );
 
+    String senderName =
+        await HelperFirebase.userInstance.doc(userID).get().then((value) {
+      return value.data()!['fullName'];
+    });
+
     HelperFunctions.popBack(context: context);
 
     HelperFunctions.showToast('Order Placed Successfully');
     HelperFunctions.navigateToScreen(
         context: context,
         screen: ReceiptScreen(
-          order: orderConformModel,
+          orderConformModel: orderConformModel,
+          senderName: senderName,
         ));
   }
 
@@ -112,7 +119,10 @@ class ProductCartController extends GetxController {
   }
 
   Stream<List<CartedModel>> getCartProducts() {
-    return HelperFirebase.addToCartInstance.snapshots().map(
+    return HelperFirebase.addToCartInstance
+        .orderBy('cartedDate', descending: true)
+        .snapshots()
+        .map(
       (event) {
         return event.docs.map((e) => CartedModel.fromMap(e.data())).toList();
       },

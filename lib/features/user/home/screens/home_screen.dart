@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
 import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
 import 'package:vendoora_mart/features/user/home/controller/product_cart_controller.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/ads_scroller_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/product_list_widget.dart';
 import 'package:vendoora_mart/features/user/home/screens/widgets/search_widget.dart';
+import 'package:vendoora_mart/features/user/order/screen/order_page.dart';
 import 'package:vendoora_mart/features/user/profile/screen/profile_screen.dart';
 import 'package:vendoora_mart/features/vendor/controller/product_controller.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
@@ -30,40 +32,36 @@ class UserHomeScreen extends StatefulWidget {
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
   late TextEditingController searchController;
+  late HomeController homeController;
+
   // String? url;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     searchController = TextEditingController();
-    Get.put(HomeController()); // Register  Controller
-    Get.put(ProductCartController());
+    if (!Get.isRegistered<HomeController>()) {
+      homeController =
+          Get.put(HomeController()); // Only put if not already registered
+    } else {
+      homeController = Get.find<HomeController>();
+    }
+
+    if (!Get.isRegistered<ProductCartController>()) {
+      Get.put(ProductCartController());
+    }
     _loadImage();
     // print('>>>>>>>>>>>>>>>>>>>>>>>>>>$url');
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadImage() async {
     HomeController contro = Get.find();
-    //   String uid = FirebaseAuth.instance.currentUser!.uid;
-    //   DocumentSnapshot userDoc =
-    //       await HelperFirebase.userInstance.doc(uid).get();
-
-    //   if (userDoc.exists) {
-    //     UserModel profileUrl =
-    //         UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
-    //     url = profileUrl.imageUrl;
-
-    //     print('/////////////////////////////////.');
-    //     print('/////////////$url.');
-    //   } else {
-    //     print('User does not exist.');
-    //     return null;
-    //   }
-    // } catch (e) {
-    //   print('Error fetching user data: $e');
-    //   return null;
-    // }
-
     String url = await AuthService.getImageUrl(
         '${TTextString.profileImage}/${FirebaseAuth.instance.currentUser!.uid}.jpg');
     contro.imageUrl.value = url;
@@ -71,8 +69,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.find();
-
     List<Widget> homeScreens = [
       SingleChildScrollView(
         child: Center(
@@ -96,11 +92,19 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       ),
       const Center(
           child: Text('Explore Screen', style: TextStyle(fontSize: 24))),
-      const Center(
-          child: Text('Carted Screen', style: TextStyle(fontSize: 24))),
+      // const Center(
+      //     child: Text('Explore Screen', style: TextStyle(fontSize: 24))),
+      OrdersPage(),
       ProfileScreen(),
     ];
     return Scaffold(
+      // backgroundColor: TColors.grey,
+      // body: Center(
+      //   child: Text(
+      //     'Home',
+      //     style: TextStyle(fontSize: 24.sp),
+      //   ),
+      // ),
       body: Obx(
         () => Center(
           child: homeScreens[homeController.currentIndexOfBottomAppBar

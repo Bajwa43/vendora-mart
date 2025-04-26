@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/carted_model.dart';
+import 'package:vendoora_mart/features/user/home/domain/model/order/order_conform_model.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/wishlist_model.dart';
 import 'package:vendoora_mart/features/user/home/screens/cart_list_page/cart_list_page.dart';
 import 'package:vendoora_mart/features/vendor/domain/models/product_model.dart';
@@ -18,6 +19,9 @@ class HomeController extends GetxController {
   RxString imageUrl = ''.obs;
   RxList<ProductModel> _listOfProducts = <ProductModel>[].obs;
   List<ProductModel> get listOfProducts => _listOfProducts;
+
+  RxList<OrderConformModel> _listOfOrderProducts = <OrderConformModel>[].obs;
+  List<OrderConformModel> get listOfOrderProducts => _listOfOrderProducts;
   RxInt currentIndexOfBottomAppBar = 0.obs;
 
   Rx<User?> firebaseUser = Rx<User?>(FirebaseAuth.instance.currentUser);
@@ -36,6 +40,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _listOfProducts.bindStream(getProducts());
+    _listOfOrderProducts.bindStream(getOrderProducts());
     loadFavorites();
   }
 
@@ -58,30 +63,88 @@ class HomeController extends GetxController {
   }
 
   void addToCart(BuildContext context, ProductModel product) async {
-    String docId = uuid.v4(); // Generate a unique ID
-    CartedModel cartedModel = CartedModel(
-      cartedId: docId,
-      productId: product.productUid.toString(),
-      productName: product.productName.toString(),
-      price: product.price.toString(),
-      size: selectedSize.value,
-      noOfProduct: '1',
-      image: product.images.first.toString(),
-      categoryType: product.fashionCategory.toString(),
-    );
-    try {
-      HelperFunctions.showBottomSheet(context);
-      await HelperFirebase.addToCartInstance
-          .doc(docId)
-          .set(cartedModel.toMap());
-      Get.back();
-      selectedSize = "".obs;
-      HelperFunctions.navigateToScreen(
-          context: context, screen: CartListPage());
-    } catch (e) {
-      HelperFunctions.showToast(e.toString());
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final cartRef = HelperFirebase.addToCartInstance;
+
+    // 1️⃣ First look for an existing cart item with same productId (and size):
+    QuerySnapshot existing = await cartRef
+        .where('productId', isEqualTo: product.productUid)
+        .where('size', isEqualTo: selectedSize.value)
+        .limit(1)
+        .get();
+
+    HelperFunctions.showBottomSheet(context);
+
+    if (existing.docs.isNotEmpty) {
+      // 2️⃣ Already in cart → increment quantity
+      final doc = existing.docs.first;
+      final data = doc.data() as Map<String, dynamic>;
+
+      // Parse existing quantity and add 1
+      int currentQty = int.tryParse(data['noOfProduct'] as String) ?? 1;
+      int newQty = currentQty + 1;
+
+      await doc.reference.update({
+        'noOfProduct': newQty.toString(),
+        'cartedDate': Timestamp.now(), // optionally update timestamp
+      });
+    } else {
+      // 3️⃣ Not in cart → add new document
+      String docId = cartRef.doc().id; // auto‐generated ID
+      Timestamp timestampNow = Timestamp.now();
+
+      CartedModel cartedModel = CartedModel(
+        cartedId: docId,
+        cartedDate: timestampNow,
+        productId: product.productUid.toString(),
+        productName: product.productName.toString(),
+        price: product.price.toString(),
+        size: selectedSize.value,
+        noOfProduct: '1',
+        image: product.images.first.toString(),
+        categoryType: product.fashionCategory.toString(),
+      );
+
+      await cartRef.doc(docId).set(cartedModel.toMap());
     }
+
+    // 4️⃣ Finish up
+    Get.back(); // close loading sheet
+    // selectedSize.value = ''; // clear selection
+    HelperFunctions.navigateToScreen(
+      context: context,
+      screen: CartListPage(),
+    );
   }
+
+  // void addToCart(BuildContext context, ProductModel product) async {
+  //   String docId = uuid.v4(); // Generate a unique ID
+  //   Timestamp timestampNow = Timestamp.now();
+
+  //   CartedModel cartedModel = CartedModel(
+  //     cartedId: docId,
+  //     cartedDate: timestampNow,
+  //     productId: product.productUid.toString(),
+  //     productName: product.productName.toString(),
+  //     price: product.price.toString(),
+  //     size: selectedSize.value,
+  //     noOfProduct: '1',
+  //     image: product.images.first.toString(),
+  //     categoryType: product.fashionCategory.toString(),
+  //   );
+  //   try {
+  //     HelperFunctions.showBottomSheet(context);
+  //     await HelperFirebase.addToCartInstance
+  //         .doc(docId)
+  //         .set(cartedModel.toMap());
+  //     Get.back();
+  //     selectedSize = "".obs;
+  //     HelperFunctions.navigateToScreen(
+  //         context: context, screen: CartListPage());
+  //   } catch (e) {
+  //     HelperFunctions.showToast(e.toString());
+  //   }
+  // }
 
   /// 🛒 **Load User's Favorites from Firestore**
   void loadFavorites() async {
@@ -114,6 +177,18 @@ class HomeController extends GetxController {
               .toMap());
     }
     update(); // Refresh UI
+  }
+
+  /// 📦 **Get List of Products**
+  Stream<List<OrderConformModel>> getOrderProducts() {
+    return HelperFirebase.orderProductsInstance
+        .orderBy('orderDate', descending: true)
+        .snapshots()
+        .map((event) {
+      return event.docs
+          .map((e) => OrderConformModel.fromMap(e.data()))
+          .toList();
+    });
   }
 
   /// 📦 **Get List of Products**

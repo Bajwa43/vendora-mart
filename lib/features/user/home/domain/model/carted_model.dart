@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CartedModel {
   final String cartedId;
   final String productId;
@@ -10,6 +12,7 @@ class CartedModel {
   final String size;
   final String noOfProduct;
   final String categoryType;
+  final Timestamp cartedDate;
   CartedModel({
     required this.cartedId,
     required this.productId,
@@ -19,6 +22,7 @@ class CartedModel {
     required this.size,
     required this.noOfProduct,
     required this.categoryType,
+    required this.cartedDate,
   });
 
   CartedModel copyWith({
@@ -30,6 +34,7 @@ class CartedModel {
     String? size,
     String? noOfProduct,
     String? categoryType,
+    Timestamp? cartedDate,
   }) {
     return CartedModel(
       cartedId: cartedId ?? this.cartedId,
@@ -40,6 +45,7 @@ class CartedModel {
       size: size ?? this.size,
       noOfProduct: noOfProduct ?? this.noOfProduct,
       categoryType: categoryType ?? this.categoryType,
+      cartedDate: cartedDate ?? this.cartedDate,
     );
   }
 
@@ -53,6 +59,7 @@ class CartedModel {
       'size': size,
       'noOfProduct': noOfProduct,
       'categoryType': categoryType,
+      'cartedDate': cartedDate,
     };
   }
 
@@ -66,6 +73,7 @@ class CartedModel {
       size: map['size'] as String,
       noOfProduct: map['noOfProduct'] as String,
       categoryType: map['categoryType'] as String,
+      cartedDate: map['cartedDate'] as Timestamp,
     );
   }
 
@@ -76,7 +84,7 @@ class CartedModel {
 
   @override
   String toString() {
-    return 'CartedModel(cartedId: $cartedId, productId: $productId, image: $image, productName: $productName, price: $price, size: $size, noOfProduct: $noOfProduct, categoryType: $categoryType)';
+    return 'CartedModel(cartedId: $cartedId, productId: $productId, image: $image, productName: $productName, price: $price, size: $size, noOfProduct: $noOfProduct, categoryType: $categoryType, cartedDate: $cartedDate)';
   }
 
   @override
@@ -90,7 +98,8 @@ class CartedModel {
         other.price == price &&
         other.size == size &&
         other.noOfProduct == noOfProduct &&
-        other.categoryType == categoryType;
+        other.categoryType == categoryType &&
+        other.cartedDate == cartedDate;
   }
 
   @override
@@ -102,6 +111,7 @@ class CartedModel {
         price.hashCode ^
         size.hashCode ^
         noOfProduct.hashCode ^
-        categoryType.hashCode;
+        categoryType.hashCode ^
+        cartedDate.hashCode;
   }
 }

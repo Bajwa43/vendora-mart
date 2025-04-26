@@ -27,6 +27,9 @@ class HelperFirebase {
 
   // static
 
+  static var orderProductsInstance = HelperFirebase.orderConformInstance
+      .where('userID', isEqualTo: FirebaseAuth.instance.currentUser!.uid);
+
   static var userInstance =
       FirebaseFirestore.instance.collection('VenderUsers');
 

@@ -59,7 +59,13 @@ class ProductHomeCardWidget extends StatelessWidget {
                     child: images.isEmpty || images.first.isEmpty
                         ? Image.asset(TImageString.greyShoeImage,
                             fit: BoxFit.fill)
-                        : Image.network(images.first),
+                        : Image.network(
+                            images.first,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(Icons
+                                  .error); // Agar image fail ho jaye to error icon dikhao
+                            },
+                          ),
                   ),
                 ),
                 Padding(
