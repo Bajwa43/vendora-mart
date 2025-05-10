@@ -1,25 +1,37 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class OrderItemModel {
   final String orderItemID;
   final String productID;
-  final String quantityOfProduct;
+  final String productName;
+  final String size;
+  final String imageUrl;
+  final int quantity;
+
   OrderItemModel({
     required this.orderItemID,
     required this.productID,
-    required this.quantityOfProduct,
+    required this.productName,
+    required this.size,
+    required this.imageUrl,
+    required this.quantity,
   });
 
   OrderItemModel copyWith({
     String? orderItemID,
     String? productID,
-    String? quantityOfProduct,
+    String? productName,
+    String? size,
+    String? imageUrl,
+    int? quantity,
   }) {
     return OrderItemModel(
       orderItemID: orderItemID ?? this.orderItemID,
       productID: productID ?? this.productID,
-      quantityOfProduct: quantityOfProduct ?? this.quantityOfProduct,
+      productName: productName ?? this.productName,
+      size: size ?? this.size,
+      imageUrl: imageUrl ?? this.imageUrl,
+      quantity: quantity ?? this.quantity,
     );
   }
 
@@ -27,7 +39,10 @@ class OrderItemModel {
     return <String, dynamic>{
       'orderItemID': orderItemID,
       'productID': productID,
-      'quantityOfProduct': quantityOfProduct,
+      'productName': productName,
+      'size': size,
+      'imageUrl': imageUrl,
+      'quantity': quantity,
     };
   }
 
@@ -35,7 +50,10 @@ class OrderItemModel {
     return OrderItemModel(
       orderItemID: map['orderItemID'] as String,
       productID: map['productID'] as String,
-      quantityOfProduct: map['quantityOfProduct'] as String,
+      productName: map['productName'] as String? ?? '',
+      size: map['size'] as String? ?? '',
+      imageUrl: map['imageUrl'] as String? ?? '',
+      quantity: map['quantity'] as int,
     );
   }
 
@@ -46,7 +64,7 @@ class OrderItemModel {
 
   @override
   String toString() =>
-      'OrderItemModel(orderItemID: $orderItemID, productID: $productID, quantityOfProduct: $quantityOfProduct)';
+      'OrderItemModel(orderItemID: $orderItemID, productID: $productID, productName: $productName, size: $size, imageUrl: $imageUrl, quantity: $quantity)';
 
   @override
   bool operator ==(covariant OrderItemModel other) {
@@ -54,10 +72,18 @@ class OrderItemModel {
 
     return other.orderItemID == orderItemID &&
         other.productID == productID &&
-        other.quantityOfProduct == quantityOfProduct;
+        other.productName == productName &&
+        other.size == size &&
+        other.imageUrl == imageUrl &&
+        other.quantity == quantity;
   }
 
   @override
   int get hashCode =>
-      orderItemID.hashCode ^ productID.hashCode ^ quantityOfProduct.hashCode;
+      orderItemID.hashCode ^
+      productID.hashCode ^
+      productName.hashCode ^
+      size.hashCode ^
+      imageUrl.hashCode ^
+      quantity.hashCode;
 }

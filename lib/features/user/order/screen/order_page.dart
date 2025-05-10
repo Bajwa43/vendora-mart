@@ -91,6 +91,7 @@ import 'package:vendoora_mart/features/user/home/controller/home_controller.dart
 import 'package:vendoora_mart/features/user/home/domain/model/order/order_conform_model.dart';
 import 'package:vendoora_mart/features/user/order/screen/order_details_page.dart';
 import 'package:vendoora_mart/features/user/order/widgets/order_card_widget.dart';
+import 'package:vendoora_mart/features/vendor/add_Product/screens/orders_screen/order_detail_screen.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -119,8 +120,14 @@ class _OrdersPageState extends State<OrdersPage> {
             SizedBox(height: 20.h),
             Expanded(
               child: Obx(() {
+                print('ON SCREEN BEFORE BUILD LIST CALL');
+
                 var controller = Get.find<HomeController>();
+
                 List<OrderConformModel> list = controller.listOfOrderProducts;
+                // List<OrderConformModel> list = controller.rxOrderList;
+
+                print('ON SCREEN AFTER BUILD LIST CALL: ${list.length}');
                 if (list.isEmpty) {
                   return Center(
                     child: Text('No orders available.'),
@@ -145,11 +152,13 @@ class _OrdersPageState extends State<OrdersPage> {
                         orderID: "${list[index].orderID}${index + 1}",
                         totalAmount: list[index].totalAmount,
                         orderDate: list[index].orderDate.toDate().toLocal(),
-                        status: list[index].paymentSatus == 'Cash'
+                        status: list[index].orderSatus == false
                             ? "In Progress"
                             : "Completed",
                         onTap: () {
-                          Get.to(() => OrderDetailsPage());
+                          Get.to(() => UserOrderDetailsPage(
+                                orderConformModel: list[index],
+                              ));
                         },
                       ),
                     );

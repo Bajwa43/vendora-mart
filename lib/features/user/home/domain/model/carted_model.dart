@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CartedModel {
   final String cartedId;
   final String productId;
+  final String venderId;
   final String image;
   final String productName;
   final String price;
@@ -16,6 +17,7 @@ class CartedModel {
   CartedModel({
     required this.cartedId,
     required this.productId,
+    required this.venderId,
     required this.image,
     required this.productName,
     required this.price,
@@ -28,6 +30,7 @@ class CartedModel {
   CartedModel copyWith({
     String? cartedId,
     String? productId,
+    String? venderId,
     String? image,
     String? productName,
     String? price,
@@ -39,6 +42,7 @@ class CartedModel {
     return CartedModel(
       cartedId: cartedId ?? this.cartedId,
       productId: productId ?? this.productId,
+      venderId: venderId ?? this.venderId,
       image: image ?? this.image,
       productName: productName ?? this.productName,
       price: price ?? this.price,
@@ -53,6 +57,7 @@ class CartedModel {
     return <String, dynamic>{
       'cartedId': cartedId,
       'productId': productId,
+      'venderId': venderId,
       'image': image,
       'productName': productName,
       'price': price,
@@ -67,6 +72,7 @@ class CartedModel {
     return CartedModel(
       cartedId: map['cartedId'] as String,
       productId: map['productId'] as String,
+      venderId: map['venderId'] as String,
       image: map['image'] as String,
       productName: map['productName'] as String,
       price: map['price'] as String,
@@ -84,7 +90,7 @@ class CartedModel {
 
   @override
   String toString() {
-    return 'CartedModel(cartedId: $cartedId, productId: $productId, image: $image, productName: $productName, price: $price, size: $size, noOfProduct: $noOfProduct, categoryType: $categoryType, cartedDate: $cartedDate)';
+    return 'CartedModel(cartedId: $cartedId, productId: $productId, venderId: $venderId, image: $image, productName: $productName, price: $price, size: $size, noOfProduct: $noOfProduct, categoryType: $categoryType, cartedDate: $cartedDate)';
   }
 
   @override
@@ -93,6 +99,7 @@ class CartedModel {
 
     return other.cartedId == cartedId &&
         other.productId == productId &&
+        other.venderId == venderId &&
         other.image == image &&
         other.productName == productName &&
         other.price == price &&
@@ -106,6 +113,7 @@ class CartedModel {
   int get hashCode {
     return cartedId.hashCode ^
         productId.hashCode ^
+        venderId.hashCode ^
         image.hashCode ^
         productName.hashCode ^
         price.hashCode ^

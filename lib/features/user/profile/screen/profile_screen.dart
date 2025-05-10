@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ProductCartController controller = Get.find();
+    // final ProductCartController productController = Get.find();
     final HomeController homeController = Get.find();
 
     return Scaffold(

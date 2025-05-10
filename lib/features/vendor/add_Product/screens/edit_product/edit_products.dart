@@ -75,8 +75,8 @@ class _EditProductScreenState extends State<EditProductScreen>
                 // _buildAnimatedTabContent('Published Products'),
                 // Text('data'),
 
-                EditProductWidget(published: false),
                 EditProductWidget(published: true),
+                EditProductWidget(published: false),
                 // Text('data'),
                 // Unpublished Products
                 // _buildAnimatedTabContent('Unpublished Products'),

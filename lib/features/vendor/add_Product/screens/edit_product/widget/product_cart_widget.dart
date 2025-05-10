@@ -51,12 +51,12 @@ class _ProductCartWidgetState extends State<ProductCartWidget> {
                         children: [
                           Icon(Icons.publish, color: Colors.white),
                           widget.product.publish == true
-                              ? Text('Publish',
+                              ? Text('UnPublish',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ))
                               : FittedBox(
-                                  child: Text('UnPublish',
+                                  child: Text('Publish',
                                       style: TextStyle(
                                         color: Colors.white,
                                       )),

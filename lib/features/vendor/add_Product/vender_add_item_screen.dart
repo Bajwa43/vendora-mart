@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:vendoora_mart/features/vendor/add_Product/screens/earning_screen.dart';
 import 'package:vendoora_mart/features/vendor/add_Product/screens/edit_product/edit_products.dart';
+import 'package:vendoora_mart/features/vendor/add_Product/screens/orders_screen/order_screen.dart';
 import 'package:vendoora_mart/features/vendor/add_Product/screens/upload_product/upload_product_screen.dart';
+import 'package:vendoora_mart/features/vendor/controller/vender_controller.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
 
 class VendorDashboardScreen extends StatefulWidget {
@@ -47,6 +51,15 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final VendorOrderController vController = Get.find<VendorOrderController>();
+    int totalOrders = 0;
+    double totalEarning = 0;
+    for (var i = 0; i < vController.orders.length; i++) {
+      if (vController.orders[i].orderSatus == true) {
+        totalEarning += vController.orders[i].totalAmount;
+        totalOrders++;
+      }
+    }
     if (isLoading) {
       return const Scaffold(
         body: Center(
@@ -76,11 +89,12 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
 
     final List<Widget> _screens = [
       EarningScreen(
+          totalEarning: totalEarning,
+          totalOrders: totalOrders,
           userData: userAllData!), // Pass fetched data to EarningScreen
       const UploadProductScreen(),
       EditProductScreen(),
-      const Center(
-          child: Text('Orders Screen', style: TextStyle(fontSize: 24))),
+      Center(child: VendorOrdersPage()),
       const Center(
           child: Text('Logout Screen', style: TextStyle(fontSize: 24))),
     ];

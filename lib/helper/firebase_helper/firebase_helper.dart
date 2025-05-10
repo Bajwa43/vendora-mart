@@ -27,8 +27,9 @@ class HelperFirebase {
 
   // static
 
-  static var orderProductsInstance = HelperFirebase.orderConformInstance
-      .where('userID', isEqualTo: FirebaseAuth.instance.currentUser!.uid);
+  static var orderProductsInstance = HelperFirebase.orderConformInstance.where(
+      'userID',
+      isEqualTo: FirebaseAuth.instance.currentUser!.uid.toString());
 
   static var userInstance =
       FirebaseFirestore.instance.collection('VenderUsers');
@@ -119,7 +120,7 @@ class HelperFirebase {
         images: ProductController.images,
         venderUid: venderId,
         productUid: productId,
-        publish: false,
+        publish: true,
         productName: ProductController.productNameController.text,
         price: ProductController.priceController.text,
         fashionCategory: ProductController.selectedFashionCategory,
@@ -164,12 +165,19 @@ class HelperFirebase {
     }
   }
 
-  // user({required String userId}) {
-  //   return FirebaseFirestore.instance
-  //       .collection('user')
-  //       .doc()
-  //       .collection(userId)
-  //       .doc()
-  //       .collection('tasks');
-  // }
+  static Future<String> getUserName({required String userId}) async {
+    try {
+      final doc = await userInstance.doc(userId).get();
+      print("Fetched user doc: ${doc.data()}");
+
+      if (doc.exists && doc.data() != null && doc.data()!.containsKey('name')) {
+        return doc['name'] ?? 'Unknown';
+      } else {
+        return 'Unknown';
+      }
+    } catch (e) {
+      print('Error fetching username: $e');
+      return 'Unknown';
+    }
+  }
 }

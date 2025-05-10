@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:vendoora_mart/features/vendor/add_Product/vender_add_item_screen.dart';
+import 'package:vendoora_mart/features/vendor/controller/vender_controller.dart';
 import 'package:vendoora_mart/features/vendor/widgets/icon_text_btn.dart';
 import 'package:vendoora_mart/helper/helper_functions.dart';
 import 'package:vendoora_mart/services/auth_service.dart';
@@ -12,6 +15,11 @@ class VendorHomeScreen extends StatefulWidget {
 }
 
 class _VendorHomeScreenState extends State<VendorHomeScreen> {
+  initState() {
+    super.initState();
+    Get.put(VendorOrderController()); // Register Controller
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

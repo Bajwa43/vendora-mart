@@ -55,57 +55,137 @@ class ProductCartController extends GetxController {
   }
 
   void orderCheckOutCompletion(BuildContext context) async {
-    List<OrderItemModel> orderItems = cartProduct.map(
-      (e) {
-        String orderItemID = uuid.v1();
-        return OrderItemModel(
-            orderItemID: orderItemID,
-            productID: e.productId,
-            quantityOfProduct: e.noOfProduct);
-      },
-    ).toList();
+    try {
+      // HelperFunctions.showToast('Order failed: $e');
 
-    String userID = FirebaseAuth.instance.currentUser!.uid.toString();
-    String orderID = uuid.v1();
-    OrderConformModel orderConformModel = OrderConformModel(
-        orderID: orderID,
-        userID: userID,
-        paymentSatus: hConroller.cashPayment.value ? 'Pending' : 'Paid',
-        orderItem: orderItems,
-        orderDate: Timestamp.now(),
-        paymentMethod: hConroller.cashPayment.value ? 'Cash' : 'Debit Card',
-        totalAmount: total.value);
+      List<VendorOrderSepModel> vendorOrderList = [];
+      bool isExistingVendor = false;
 
-    HelperFunctions.showBottomSheet(Get.context!);
+      for (var i = 0; i < cartProduct.length; i++) {
+        for (var v = 0; v < vendorOrderList.length; v++) {
+          if (cartProduct[i].venderId == vendorOrderList[v].venderID) {
+            vendorOrderList[v].productList.add(OrderItemModel(
+                productName: cartProduct[i].productName,
+                size: cartProduct[i].size,
+                imageUrl: cartProduct[i].image,
+                orderItemID: uuid.v1(),
+                productID: cartProduct[i].productId,
+                quantity: int.parse(cartProduct[i].noOfProduct)));
+            print('Enter in Fun');
+            print('in if $v');
+            isExistingVendor = true;
+            break;
+          }
+          print('in else $v');
+        }
+        print('outer for $i');
 
-    final cartedCollection = HelperFirebase.deleteCartedItemInstance;
+        if (isExistingVendor) {
+          isExistingVendor = false;
+          continue;
+        }
 
-    final snapshot = await cartedCollection.get();
-
-    for (final doc in snapshot.docs) {
-      await doc.reference.delete();
-    }
-    hConroller.cashPayment.value = true;
-    hConroller.debitCardPayment.value = false;
-
-    HelperFirebase.orderConformInstance.doc(orderID).set(
-          orderConformModel.toMap(),
+        vendorOrderList.add(
+          VendorOrderSepModel(
+            orderID: uuid.v1(),
+            orderStatus: hConroller.cashPayment.value ? 'Pending' : 'Paid',
+            venderID: cartProduct[i].venderId,
+            productList: [
+              OrderItemModel(
+                  productName: cartProduct[i].productName,
+                  size: cartProduct[i].size,
+                  imageUrl: cartProduct[i].image,
+                  orderItemID: uuid.v1(),
+                  productID: cartProduct[i].productId,
+                  quantity: int.parse(cartProduct[i].noOfProduct)),
+            ],
+          ),
         );
+      }
 
-    String senderName =
-        await HelperFirebase.userInstance.doc(userID).get().then((value) {
-      return value.data()!['fullName'];
-    });
+      // Create OrderItems from cart
+      // List<OrderItemModel> orderItems = cartProduct.map(
+      //   (e) {
+      //     String orderItemID = uuid.v1();
+      //     return OrderItemModel(
+      //       orderItemID: orderItemID,
+      //       productID: e.productId,
+      //       quantity: int.parse(e.noOfProduct),
+      //       vendorID: e.venderId, // make sure your CartedModel has vendorID
+      //     );
+      //   },
+      // ).toList();
+      print('After in OrderItem List : ${vendorOrderList.length}');
+      String userID = FirebaseAuth.instance.currentUser!.uid;
+      String orderID = uuid.v1();
 
-    HelperFunctions.popBack(context: context);
+      // Create the full order
+      OrderConformModel orderConformModel = OrderConformModel(
+          // orderSatus: 'Pending',
+          orderSatus: false,
+          orderID: orderID,
+          userID: userID,
+          paymentSatus: hConroller.cashPayment.value ? 'Pending' : 'Paid',
+          // orderItem: orderItems,
+          orderDate: Timestamp.now(),
+          paymentMethod: hConroller.cashPayment.value ? 'Cash' : 'Debit Card',
+          totalAmount: total.value,
+          orderItemVendor: vendorOrderList);
 
-    HelperFunctions.showToast('Order Placed Successfully');
-    HelperFunctions.navigateToScreen(
+      print('After in OrderModel Ready');
+
+      // Show loading/bottom sheet
+      HelperFunctions.showBottomSheet(Get.context!);
+
+      // Clear the cart
+      final cartedCollection = HelperFirebase.deleteCartedItemInstance;
+      final snapshot = await cartedCollection.get();
+      print('After in Carted Collection: ${snapshot.docs.length}');
+
+      for (final doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+      print('After in Carted Delete');
+      print('After in Carted Collection Delete: ${snapshot.docs.length}');
+
+      // Reset controller values
+      hConroller.cashPayment.value = true;
+      hConroller.debitCardPayment.value = false;
+
+      // Upload order to Firebase
+      await HelperFirebase.orderConformInstance
+          .doc(orderID)
+          .set(
+            orderConformModel.toMap(),
+          )
+          .then(
+        (value) {
+          print('After in  OrderConformed added to Firebase');
+        },
+      );
+
+      // Get sender name from user collection
+      String senderName = await HelperFirebase.userInstance
+          .doc(userID)
+          .get()
+          .then((value) => value.data()?['fullName'] ?? 'Unknown User');
+
+      // Hide loading and show success
+      HelperFunctions.popBack(context: context);
+      HelperFunctions.showToast('Order Placed Successfully');
+
+      // Navigate to receipt screen
+      HelperFunctions.navigateToScreen(
         context: context,
         screen: ReceiptScreen(
           orderConformModel: orderConformModel,
           senderName: senderName,
-        ));
+        ),
+      );
+    } catch (e) {
+      HelperFunctions.popBack(context: context);
+      HelperFunctions.showToast('Order failed: $e');
+    }
   }
 
   void calculateSubtotal() {

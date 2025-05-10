@@ -11,6 +11,7 @@ class TImageString {
   static String paypalLogo = 'assets/images/paypal.png';
   static String creditCardLogo = 'assets/images/creditCard.png';
   static String person = 'assets/images/brownboy*.png';
+  static String banner = 'assets/images/banner.jpg';
 
   // static String onBoarding1 = "assets/images/on_boarding_images/homeIcon.gif";
   // static String onBoarding2 =

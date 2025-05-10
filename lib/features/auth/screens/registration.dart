@@ -364,8 +364,4 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
-
-  void _logoPicker() {}
-
-  void _shopImagePicker() {}
 }

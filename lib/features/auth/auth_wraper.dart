@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:vendoora_mart/features/admin/admin_dashboard/admin_dashboard.dart';
+import 'package:vendoora_mart/features/admin/controller/admin_controller.dart';
 import 'package:vendoora_mart/features/auth/screens/dayn_night_animate.dart';
 import 'package:vendoora_mart/features/auth/screens/loginScreen.dart';
 import 'package:vendoora_mart/features/user/home/controller/home_controller.dart';
@@ -10,6 +12,7 @@ import 'package:vendoora_mart/features/user/home/screens/home_screen.dart';
 import 'package:vendoora_mart/features/vendor/home/screens/vendor_home_Screen.dart';
 import 'package:vendoora_mart/helper/enum.dart';
 import 'package:vendoora_mart/helper/firebase_helper/firebase_helper.dart';
+import 'package:vendoora_mart/main.dart';
 import 'package:vendoora_mart/utiles/constants/colors.dart';
 
 class AuthWrapper extends StatelessWidget {
@@ -63,8 +66,15 @@ class AuthWrapper extends StatelessWidget {
                 );
               }
 
-              if (snapShot.hasData && snapShot.data!.docs.isNotEmpty) {
+              if (snapShot.hasData &&
+                  snapShot.data!.docs.isNotEmpty &&
+                  snapShot.data!.docs[0]['userType'] != 'admin') {
                 return const VendorHomeScreen();
+              } else if (user.email == 'fahadbajwa1@gmail.com') {
+                Get.put(
+                  AdminNavController(),
+                );
+                return AnimatedAdminDashboard();
               } else {
                 Get.put(
                   HomeController(),

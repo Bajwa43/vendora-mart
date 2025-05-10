@@ -31,6 +31,7 @@ class HomeController extends GetxController {
   RxMap<String, String> productImageUrls = <String, String>{}.obs;
   RxBool cashPayment = true.obs;
   RxBool debitCardPayment = false.obs;
+  RxBool isConformOrder = false.obs;
 
   void selectSize(String size) {
     selectedSize.value = size;
@@ -95,6 +96,7 @@ class HomeController extends GetxController {
 
       CartedModel cartedModel = CartedModel(
         cartedId: docId,
+        venderId: product.venderUid.toString(),
         cartedDate: timestampNow,
         productId: product.productUid.toString(),
         productName: product.productName.toString(),
@@ -181,13 +183,18 @@ class HomeController extends GetxController {
 
   /// 📦 **Get List of Products**
   Stream<List<OrderConformModel>> getOrderProducts() {
+    print('getOrderProducts');
     return HelperFirebase.orderProductsInstance
         .orderBy('orderDate', descending: true)
         .snapshots()
         .map((event) {
-      return event.docs
-          .map((e) => OrderConformModel.fromMap(e.data()))
-          .toList();
+      print('getOrderProducts event: ${event.docs.length}');
+      var list;
+
+      list =
+          event.docs.map((e) => OrderConformModel.fromMap(e.data())).toList();
+      print('LIST>> ${list.length}');
+      return list;
     });
   }
 
