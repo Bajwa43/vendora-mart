@@ -71,9 +71,7 @@ class AuthWrapper extends StatelessWidget {
                   snapShot.data!.docs[0]['userType'] != 'admin') {
                 return const VendorHomeScreen();
               } else if (user.email == 'fahadbajwa1@gmail.com') {
-                Get.put(
-                  AdminNavController(),
-                );
+                Get.put(AdminNavController());
                 return AnimatedAdminDashboard();
               } else {
                 Get.put(

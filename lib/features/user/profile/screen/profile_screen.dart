@@ -48,20 +48,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(40),
-                child: Obx(
-                  () => SizedBox(
-                    width: 80.w,
-                    height: 80.h,
-                    child: homeController.imageUrl.value.isNotEmpty
-                        ? Image.network(
-                            homeController.imageUrl.value,
-                            fit: BoxFit.fill,
-                          )
-                        : Image.asset(TImageString.person),
-                  ),
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(40),
+                  child: Obx(() => SizedBox(
+                        width: 80.w,
+                        height: 80.h,
+                        child:
+                            (homeController.currentUserModel.value?.imageUrl ??
+                                        '')
+                                    .isNotEmpty
+                                ? Image.network(
+                                    homeController
+                                        .currentUserModel.value!.imageUrl!,
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (_, __, ___) =>
+                                        Image.asset(TImageString.person),
+                                  )
+                                : Image.asset(TImageString.person),
+                      ))),
               // Text(
               //   user.fullName.toString(),
               //   style: TTextStyle.profileHeader,

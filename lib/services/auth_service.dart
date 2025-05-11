@@ -287,6 +287,7 @@ class AuthService {
       TextEditingController fullNameController,
       TextEditingController phoneController,
       TextEditingController passwordController,
+      UserCredential userCredential,
       UserModel user) async {
     try {
       showModalBottomSheet(
@@ -308,10 +309,6 @@ class AuthService {
               ));
       // Get.back();
       print("Full Name Before: ${fullNameController.text}");
-
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text);
 
       // UserModel userModel = UserModel(
       //     userId: userCredential.user!.uid,

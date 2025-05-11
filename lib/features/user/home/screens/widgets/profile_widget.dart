@@ -14,6 +14,7 @@ class ProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeController contr = Get.find();
+
     return Padding(
       padding: EdgeInsets.only(top: 64.h),
       child: Row(
@@ -21,18 +22,32 @@ class ProfileWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30.sp),
-            child: Obx(
-              () => Container(
+            child: Obx(() {
+              final user = contr.currentUserModel.value;
+
+              print('>>>>> >>  $user');
+
+              if (user == null) {
+                return const CircularProgressIndicator(); // or a placeholder
+              }
+
+              final imageUrl = user.imageUrl ?? '';
+
+              return Container(
                 width: TSizes.profilePictureW,
                 height: TSizes.profilePictureH,
-                child: contr.imageUrl.value.isNotEmpty
+                child: imageUrl.isNotEmpty
                     ? Image.network(
-                        contr.imageUrl.value,
-                        fit: BoxFit.fill,
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                              TImageString.person); // fallback on error
+                        },
                       )
                     : Image.asset(TImageString.person),
-              ),
-            ),
+              );
+            }),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

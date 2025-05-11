@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vendoora_mart/features/auth/domain/models/user_model.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/carted_model.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/order/order_conform_model.dart';
 import 'package:vendoora_mart/features/user/home/domain/model/wishlist_model.dart';
@@ -32,6 +33,7 @@ class HomeController extends GetxController {
   RxBool cashPayment = true.obs;
   RxBool debitCardPayment = false.obs;
   RxBool isConformOrder = false.obs;
+  Rxn<UserModel> currentUserModel = Rxn<UserModel>();
 
   void selectSize(String size) {
     selectedSize.value = size;
@@ -43,6 +45,20 @@ class HomeController extends GetxController {
     _listOfProducts.bindStream(getProducts());
     _listOfOrderProducts.bindStream(getOrderProducts());
     loadFavorites();
+    // fetchCurrentUserData();
+  }
+
+  Future<void> fetchCurrentUserData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      final doc = await HelperFirebase.userInstance.doc(uid).get();
+      if (doc.exists) {
+        print("✅ Document data: ${doc.data()}");
+        currentUserModel.value = UserModel.fromMap(doc.data()!);
+      } else {
+        print("❌ Document does not exist in Firestore for UID: $uid");
+      }
+    }
   }
 
   void preloadFirstImages() async {

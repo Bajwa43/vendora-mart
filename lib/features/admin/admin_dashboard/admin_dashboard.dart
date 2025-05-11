@@ -14,7 +14,7 @@ class AnimatedAdminDashboard extends StatefulWidget {
 
 class _AnimatedAdminDashboardState extends State<AnimatedAdminDashboard>
     with SingleTickerProviderStateMixin {
-  final controller = Get.put(AdminNavController());
+  late AdminNavController controller;
   // bool isSidebarOpen = false;
   final Duration duration = Duration(milliseconds: 300);
 
@@ -22,13 +22,15 @@ class _AnimatedAdminDashboardState extends State<AnimatedAdminDashboard>
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _loadImage();
+    controller = Get.find<AdminNavController>();
   }
 
   @override
   Widget build(BuildContext context) {
     double sidebarWidth = MediaQuery.of(context).size.width * 0.7;
-    final AdminNavController controller = Get.find<AdminNavController>();
+    // print('VENDOR > ${controller.listOfVendors[1]}');
+
+    // final AdminNavController controller = Get.find<AdminNavController>();
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,

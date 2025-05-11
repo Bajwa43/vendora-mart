@@ -46,11 +46,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     } else {
       homeController = Get.find<HomeController>();
     }
+    homeController.fetchCurrentUserData();
 
     if (!Get.isRegistered<ProductCartController>()) {
       Get.put(ProductCartController());
     }
-    _loadImage();
+    // _loadImage();
     // print('>>>>>>>>>>>>>>>>>>>>>>>>>>$url');
   }
 
@@ -60,12 +61,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     super.dispose();
   }
 
-  Future<void> _loadImage() async {
-    HomeController contro = Get.find();
-    String url = await AuthService.getImageUrl(
-        '${TTextString.profileImage}/${FirebaseAuth.instance.currentUser!.uid}.jpg');
-    contro.imageUrl.value = url;
-  }
+// OLD WAY OF GET IMAGE BY FIRESTORE STORE REAL IMAGE
+  // Future<void> _loadImage() async {
+  //   HomeController contro = Get.find();
+  //   String url = await AuthService.getImageUrl(
+  //       '${TTextString.profileImage}/${FirebaseAuth.instance.currentUser!.uid}.jpg');
+  //   contro.imageUrl.value = url;
+  // }
 
   @override
   Widget build(BuildContext context) {

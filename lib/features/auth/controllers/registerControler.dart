@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -91,20 +92,17 @@ class RegisterController extends GetxController {
           shopImageUrl: isVendor ? vendorImage.value!.path : '',
           userId: isVendor ? vendorLogo.value!.path : '');
 
-      String? userCredentual = await AuthService.registerUserWithFirebaseAuth(
-        context,
-        emailController,
-        fullnameController,
-        phoneController,
-        passwordController,
-        user,
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
 
       // String imageUrl = '';
       if (!isVendor) {
         if (profileImage.value != null) {
-          await AuthService.uploadImageToStorage(
-              profileImage.value, userCredentual, TTextString.profileImage);
+          user.imageUrl = await AuthService.uploadImageToStorage(
+              profileImage.value,
+              userCredential.user!.uid,
+              TTextString.profileImage);
         } else {
           HelperFunctions.showToast('Image not selected');
         }
@@ -116,10 +114,14 @@ class RegisterController extends GetxController {
         // passwordController.clear();
       } else if (isVendor) {
         if (vendorImage.value != null && vendorLogo.value != null) {
-          await AuthService.uploadImageToStorage(
-              profileImage.value, userCredentual, TTextString.vendorShopImage);
-          await AuthService.uploadImageToStorage(
-              profileImage.value, userCredentual, TTextString.vendorShopLogo);
+          user.shopImageUrl = await AuthService.uploadImageToStorage(
+              vendorImage.value,
+              userCredential.user!.uid,
+              TTextString.vendorShopImage);
+          user.logoUrl = await AuthService.uploadImageToStorage(
+              vendorLogo.value,
+              userCredential.user!.uid,
+              TTextString.vendorShopLogo);
         } else {
           HelperFunctions.showToast('Images And Logo not selected');
         }
@@ -132,6 +134,16 @@ class RegisterController extends GetxController {
       } else {
         HelperFunctions.showToast('Error while uploading Image To Storage.');
       }
+
+      String? userCredentual = await AuthService.registerUserWithFirebaseAuth(
+        context,
+        emailController,
+        fullnameController,
+        phoneController,
+        passwordController,
+        userCredential,
+        user,
+      );
     }
   }
 }
